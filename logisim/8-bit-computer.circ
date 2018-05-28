@@ -584,6 +584,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(330,260)" to="(360,260)"/>
     <wire from="(420,680)" to="(440,680)"/>
     <wire from="(1120,1590)" to="(1120,1650)"/>
+    <wire from="(320,710)" to="(470,710)"/>
     <wire from="(1390,130)" to="(1390,230)"/>
     <wire from="(170,2880)" to="(170,2930)"/>
     <wire from="(110,700)" to="(120,700)"/>
@@ -1479,6 +1480,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <comp lib="5" loc="(1480,1610)" name="DotMatrix">
       <a name="matrixcols" val="3"/>
       <a name="matrixrows" val="1"/>
+      <a name="color" val="#f00000"/>
     </comp>
     <comp lib="1" loc="(1220,490)" name="NOT Gate">
       <a name="size" val="20"/>
