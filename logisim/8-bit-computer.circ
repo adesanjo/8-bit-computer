@@ -864,6 +864,7 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(230,840)" to="(230,1300)"/>
     <wire from="(540,780)" to="(540,810)"/>
     <wire from="(1070,170)" to="(1190,170)"/>
+    <wire from="(320,80)" to="(420,80)"/>
     <wire from="(360,280)" to="(360,310)"/>
     <wire from="(1120,1040)" to="(1120,1050)"/>
     <wire from="(110,670)" to="(110,700)"/>
