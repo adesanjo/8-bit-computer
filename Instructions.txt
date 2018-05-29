@@ -22,6 +22,15 @@ V 0e      STB Badd               Stores value from register B to memory
 V 0f      LDAB                   Copies value from register B to register A
 V 10      LDBA                   Copies value from register A to register B
 
+  11      OUT num      num       Outputs an immediate
+  12      OUT A                  Outputs value of register A
+  13      OUT B                  Outputs value of register B
+  14      OUT Aadd               Outputs value from memory
+  15      OUT Badd               Outputs value from memory
+  16      OUT add      add       Outputs value from memory
+  17      OUTS                   Set output mode to Signed
+  18      OUTU                   Set output mode to Unsigned
+
   ff      HLT
 
 -----------------------------------
