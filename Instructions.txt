@@ -1,156 +1,234 @@
   Opcode  Instruction  Operands  Description
 
-V 00      NOP
+v 00      NOP
 
-V 01      LDAI num     num       Loads an immediate to register A
-V 02      LDBI num     num       Loads an immediate to register B
+v 01      LDAI num     num       Loads an immediate to register A
+v 02      LDBI num     num       Loads an immediate to register B
 
-V 03      LDA add      add       Loads value from memory to register A
-V 04      LDB add      add       Loads value from memory to register B
-V 05      LDA Aadd               Loads value from memory to register A
-V 06      LDB Aadd               Loads value from memory to register B
-V 05      LDA Badd               Loads value from memory to register A
-V 06      LDB Badd               Loads value from memory to register B
+v 03      LDA add      add       Loads value from memory to register A
+v 04      LDB add      add       Loads value from memory to register B
+v 05      LDA Aadd               Loads value from memory to register A
+v 06      LDB Aadd               Loads value from memory to register B
+v 05      LDA Badd               Loads value from memory to register A
+v 06      LDB Badd               Loads value from memory to register B
 
-V 09      STA add      add       Stores value from register A to memory
-V 0a      STB add      add       Stores value from register B to memory
-V 0b      STA Aadd               Stores value from register A to memory
-V 0c      STB Aadd               Stores value from register B to memory
-V 0d      STA Badd               Stores value from register A to memory
-V 0e      STB Badd               Stores value from register B to memory
+v 09      STA add      add       Stores value from register A to memory
+v 0a      STB add      add       Stores value from register B to memory
+v 0b      STA Aadd               Stores value from register A to memory
+v 0c      STB Aadd               Stores value from register B to memory
+v 0d      STA Badd               Stores value from register A to memory
+v 0e      STB Badd               Stores value from register B to memory
 
-V 0f      LDAB                   Copies value from register B to register A
-V 10      LDBA                   Copies value from register A to register B
+v 0f      LDAB                   Copies value from register B to register A
+v 10      LDBA                   Copies value from register A to register B
 
-  11      OUT num      num       Outputs an immediate
-  12      OUT A                  Outputs value of register A
-  13      OUT B                  Outputs value of register B
-  14      OUT Aadd               Outputs value from memory
-  15      OUT Badd               Outputs value from memory
-  16      OUT add      add       Outputs value from memory
-  17      OUTS                   Set output mode to Signed
-  18      OUTU                   Set output mode to Unsigned
+v 11      OUT num      num       Outputs an immediate
+v 12      OUT A                  Outputs value of register A
+v 13      OUT B                  Outputs value of register B
+v 14      OUT Aadd               Outputs value from memory
+v 15      OUT Badd               Outputs value from memory
+v 16      OUT add      add       Outputs value from memory
+v 17      OUTS                   Set output mode to Signed
+v 18      OUTU                   Set output mode to Unsigned
 
-  ff      HLT
+v ff      HLT                    Halts the execution of the program
 
 -----------------------------------
 Possible Micro Instructions:
 
-00001 hlt
-00002 pc in
-00004 pc write
-00008 mem out
-00010 ir in
-00020 out in
-00040 signed data
-00080 signed in
-00100 mar in
-00200 ram in
-00400 ram out
-00800 a in
-01000 a out
-02000 b in
-04000 b out
-08000 alu out
-10000 alu op0
-20000 alu op1
-40000 jz
-80000 jnn
+000001 hlt
+000002 pc in
+000004 pc write
+000008 mem out
+000010 ir in
+000020 out in
+000040 signed data
+000080 signed in
+000100 mar in
+000200 ram in
+000400 ram out
+000800 a in
+001000 a out
+002000 b in
+004000 b out
+008000 alu out
+010000 alu op0
+020000 alu op1
+040000 jz
+080000 jnn
+100000 reset counter
 
 00  NOP:
 	mem out, ir in
 	pc in
+	reset counter
 
 01  LDAI num:
 	mem out, ir in
 	pc in
 	mem out, a in
 	pc in
+	reset counter
 
 02  LDBI num:
 	mem out, ir in
 	pc in
 	mem out, b in
 	pc in
+	reset counter
 
 03  LDA add:
 	mem out, ir in
 	pc in
 	mem out, mar in
 	ram out, a in, pc in
+	reset counter
 
 04  LDB add:
 	mem out, ir in
 	pc in
 	mem out, mar in
 	ram out, b in, pc in
+	reset counter
 
 05  LDA Aadd:
 	mem out, ir in
 	pc in
 	a out, mar in
 	ram out, a in
+	reset counter
 
 06  LDB Aadd:
 	mem out, ir in
 	pc in
 	a out, mar in
 	ram out, b in
+	reset counter
 
 07  LDA Badd:
 	mem out, ir in
 	pc in
 	b out, mar in
 	ram out, a in
+	reset counter
 
 08  LDB Badd:
 	mem out, ir in
 	pc in
 	b out, mar in
 	ram out, b in
+	reset counter
 
 09  STA add:
 	mem out, ir in
 	pc in
 	mem out, mar in
 	a out, ram in, pc in
+	reset counter
 
 0a  STB add:
 	mem out, ir in
 	pc in
 	mem out, mar in
 	b out, ram in, pc in
+	reset counter
 
 0b  STA Aadd:
 	mem out, ir in
 	pc in
 	a out, mar in
 	a out, ram in
+	reset counter
 
 0c  STB Aadd:
 	mem out, ir in
 	pc in
 	a out, mar in
 	b out, ram in
+	reset counter
 
 0d  STA Badd:
 	mem out, ir in
 	pc in
 	b out, mar in
 	a out, ram in
+	reset counter
 
 0e  STB Badd:
 	mem out, ir in
 	pc in
 	b out, mar in
 	b out, ram in
+	reset counter
 
 0f  LDAB:
 	mem out, ir in
 	pc in
 	b out, a in
+	reset counter
 
 10  LDBA:
 	mem out, ir in
 	pc in
 	a out, b in
+	reset counter
+
+11  OUT num:
+	mem out, ir in
+	pc in
+	mem out, out in
+	pc in
+	reset counter
+
+12  OUT A:
+	mem out, ir in
+	pc in
+	a out, out in
+	reset counter
+
+13  OUT B:
+	mem out, ir in
+	pc in
+	b out, out in
+	reset counter
+
+14  OUT Aadd:
+	mem out, ir in
+	pc in
+	a out, mar in
+	ram out, out in
+	reset counter
+
+15  OUT Badd:
+	mem out, ir in
+	pc in
+	b out, mar in
+	ram out, out in
+	reset counter
+
+16  OUT add:
+	mem out, ir in
+	pc in
+	mem out, mar in
+	ram out, out in, pc in
+	reset counter
+
+17  OUTS:
+	mem out, ir in
+	pc in
+	signed data, signed in
+	reset counter
+
+18  OUTU:
+	mem out, ir in
+	pc in
+	signed in
+	reset counter
+
+
+
+ff  HLT:
+	mem out, ir in
+	pc in
+	hlt
+	reset counter
