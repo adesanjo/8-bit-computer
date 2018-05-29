@@ -1,0 +1,147 @@
+  Opcode  Instruction  Operands  Description
+
+V 00      NOP
+
+V 01      LDAI num     num       Loads an immediate to register A
+V 02      LDBI num     num       Loads an immediate to register B
+
+V 03      LDA add      add       Loads value from memory to register A
+V 04      LDB add      add       Loads value from memory to register B
+V 05      LDA Aadd               Loads value from memory to register A
+V 06      LDB Aadd               Loads value from memory to register B
+V 05      LDA Badd               Loads value from memory to register A
+V 06      LDB Badd               Loads value from memory to register B
+
+V 09      STA add      add       Stores value from register A to memory
+V 0a      STB add      add       Stores value from register B to memory
+V 0b      STA Aadd               Stores value from register A to memory
+V 0c      STB Aadd               Stores value from register B to memory
+V 0d      STA Badd               Stores value from register A to memory
+V 0e      STB Badd               Stores value from register B to memory
+
+V 0f      LDAB                   Copies value from register B to register A
+V 10      LDBA                   Copies value from register A to register B
+
+  ff      HLT
+
+-----------------------------------
+Possible Micro Instructions:
+
+00001 hlt
+00002 pc in
+00004 pc write
+00008 mem out
+00010 ir in
+00020 out in
+00040 signed data
+00080 signed in
+00100 mar in
+00200 ram in
+00400 ram out
+00800 a in
+01000 a out
+02000 b in
+04000 b out
+08000 alu out
+10000 alu op0
+20000 alu op1
+40000 jz
+80000 jnn
+
+00  NOP:
+	mem out, ir in
+	pc in
+
+01  LDAI num:
+	mem out, ir in
+	pc in
+	mem out, a in
+	pc in
+
+02  LDBI num:
+	mem out, ir in
+	pc in
+	mem out, b in
+	pc in
+
+03  LDA add:
+	mem out, ir in
+	pc in
+	mem out, mar in
+	ram out, a in, pc in
+
+04  LDB add:
+	mem out, ir in
+	pc in
+	mem out, mar in
+	ram out, b in, pc in
+
+05  LDA Aadd:
+	mem out, ir in
+	pc in
+	a out, mar in
+	ram out, a in
+
+06  LDB Aadd:
+	mem out, ir in
+	pc in
+	a out, mar in
+	ram out, b in
+
+07  LDA Badd:
+	mem out, ir in
+	pc in
+	b out, mar in
+	ram out, a in
+
+08  LDB Badd:
+	mem out, ir in
+	pc in
+	b out, mar in
+	ram out, b in
+
+09  STA add:
+	mem out, ir in
+	pc in
+	mem out, mar in
+	a out, ram in, pc in
+
+0a  STB add:
+	mem out, ir in
+	pc in
+	mem out, mar in
+	b out, ram in, pc in
+
+0b  STA Aadd:
+	mem out, ir in
+	pc in
+	a out, mar in
+	a out, ram in
+
+0c  STB Aadd:
+	mem out, ir in
+	pc in
+	a out, mar in
+	b out, ram in
+
+0d  STA Badd:
+	mem out, ir in
+	pc in
+	b out, mar in
+	a out, ram in
+
+0e  STB Badd:
+	mem out, ir in
+	pc in
+	b out, mar in
+	b out, ram in
+
+0f  LDAB:
+	mem out, ir in
+	pc in
+	b out, a in
+
+10  LDBA:
+	mem out, ir in
+	pc in
+	a out, b in
