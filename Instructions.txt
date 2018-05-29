@@ -1,5 +1,6 @@
 Immediates are given on 1 byte
 Addresses are given on 2 bytes
+All immediate numbers and addresses are given in hexadecimal
 
   Opcode  Instruction  Operands  Description
 
@@ -10,77 +11,90 @@ v 02      LDBI num     num       Loads an immediate to register B
 
 v 03      LDA add      add       Loads value from memory to register A
 v 04      LDB add      add       Loads value from memory to register B
-v 05      LDA regadd             Loads value from memory to register A
-v 06      LDB regadd             Loads value from memory to register B
+v 05      LDAR                   Loads value from memory to register A
+v 06      LDBR                   Loads value from memory to register B
 
 v 07      STA add      add       Stores value from register A to memory
 v 08      STB add      add       Stores value from register B to memory
-v 09      STA regadd             Stores value from register A to memory
-v 0a      STB regadd             Stores value from register B to memory
+v 09      STAR                   Stores value from register A to memory
+v 0a      STBR                   Stores value from register B to memory
 
 v 0b      LDAB                   Copies value from register B to register A
 v 0c      LDBA                   Copies value from register A to register B
 
-v 0d      OUT num      num       Outputs an immediate
-v 0e      OUTA                   Outputs value of register A
-v 0f      OUTB                   Outputs value of register B
-v 10      OUT regadd             Outputs value from memory
-v 11      OUT add      add       Outputs value from memory
-v 12      OUTS                   Set output mode to Signed
-v 13      OUTU                   Set output mode to Unsigned
+  0d      LDCA                   Copies value from register A to register C
+  0e      LDCB                   Copies value from register B to register C
+  0f      LDAC                   Copies value from register C to register A
+  10      LDBC                   Copies value from register C to register B
+  11      LDCI num     num       Loads an immediate to register C
+  12      LDC add      add       Loads value from memory to register C
+  13      LDCR                   Loads value from memory to register C
+  14      STC add      add       Stores value from register C to memory
+  15      STCR                   Stores value from register C to memory
 
-  14      ADD                    Adds values of A and B and stores result in A
-  15      ADD num      num       Adds values of A and an immediate (in B) and stores result in A
-  16      ADD add      add       Adds values of A and a memory location (in B) and stores result in A
-  17      ADD regadd             Adds values of A and a memory location (in B) and stores result in A
+v 16      OUT num      num       Outputs an immediate
+v 17      OUTA                   Outputs value of register A
+v 18      OUTB                   Outputs value of register B
+v 19      OUTR                   Outputs value from memory
+v 1a      OUT add      add       Outputs value from memory
+v 1b      OUTS                   Set output mode to Signed
+v 1c      OUTU                   Set output mode to Unsigned
 
-  18      SUB                    Subtracts values of A and B and stores result in A
-  19      SUB num      num       Subtracts values of A and an immediate (in B) and stores result in A
-  1a      SUB add      add       Subtracts values of A and a memory location (in B) and stores result in A
-  1b      SUB regadd             Subtracts values of A and a memory location (in B) and stores result in A
+  1d      ADD                    Adds values of A and B and stores result in A
+  1e      ADD num      num       Adds values of A and an immediate (in B) and stores result in A
+  1f      ADD add      add       Adds values of A and a memory location (in B) and stores result in A
+  20      ADDR                   Adds values of A and a memory location (in B) and stores result in A
 
-  1c      ROR1                   Rotates right value of A 1 position
-  1d      ROR2                   Rotates right value of A 2 positions
-  1e      ROR3                   Rotates right value of A 3 positions
-  1f      ROR4                   Rotates right value of A 4 positions
-  20      ROR5                   Rotates right value of A 5 positions
-  21      ROR6                   Rotates right value of A 6 positions
-  22      ROR7                   Rotates right value of A 7 positions
+  21      SUB                    Subtracts values of A and B and stores result in A
+  22      SUB num      num       Subtracts values of A and an immediate (in B) and stores result in A
+  23      SUB add      add       Subtracts values of A and a memory location (in B) and stores result in A
+  24      SUBR                   Subtracts values of A and a memory location (in B) and stores result in A
 
-  23      NAND                   Nands values of A and B and stores result in A
-  24      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
-  25      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
-  26      NAND regadd            Nands values of A and a memory location (in B) and stores result in A
+  25      ROR1                   Rotates right value of A 1 position
+  26      ROR2                   Rotates right value of A 2 positions
+  27      ROR3                   Rotates right value of A 3 positions
+  28      ROR4                   Rotates right value of A 4 positions
+  29      ROR5                   Rotates right value of A 5 positions
+  2a      ROR6                   Rotates right value of A 6 positions
+  2b      ROR7                   Rotates right value of A 7 positions
+
+  2c      NAND                   Nands values of A and B and stores result in A
+  2d      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
+  2e      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
+  2f      NANDR                  Nands values of A and a memory location (in B) and stores result in A
 
 v ff      HLT                    Halts the execution of the program
 
 -----------------------------------
 Possible Micro Instructions:
 
-000001 hlt
-000002 reset counter
-000004 mem out
-000008 ir in
-000010 pcl write
-000020 pch write
-000040 pcl in
-000080 pch in
-000100 marl in
-000200 marh in
-000400 ram in
-000800 ram out
-001000 a in
-002000 a out
-004000 b in
-008000 b out
-010000 alu out
-020000 alu op0
-040000 alu op1
-080000 signed data
-100000 signed in
-200000 out in
-400000 jzl
-800000 jzh
+00000000 nop
+00000001 hlt
+00000002 reset counter
+00000004 mem out
+00000008 ir in
+00000010 pcl write
+00000020 pch write
+00000040 pcl in
+00000080 pch in
+00000100 marl in
+00000200 marh in
+00000400 ram in
+00000800 ram out
+00001000 a in
+00002000 a out
+00004000 b in
+00008000 b out
+00010000 alu out
+00020000 alu op0
+00040000 alu op1
+00080000 signed data
+00100000 signed in
+00200000 out in
+00400000 jzl
+00800000 jzh
+01000000 c in
+02000000 c out
 
 00  NOP:
 	mem out, ir in
@@ -181,26 +195,28 @@ Possible Micro Instructions:
 	a out, b in
 	reset counter
 
-0d  OUT num:
+
+
+16  OUT num:
 	mem out, ir in
 	pch in, pcl in
 	mem out, out in
 	pch in, pcl in
 	reset counter
 
-0e  OUTA:
+17  OUTA:
 	mem out, ir in
 	pch in, pcl in
 	a out, out in
 	reset counter
 
-0f  OUTB:
+18  OUTB:
 	mem out, ir in
 	pch in, pcl in
 	b out, out in
 	reset counter
 
-10  OUT regadd:
+19  OUT regadd:
 	mem out, ir in
 	pch in, pcl in
 	a out, marh in
@@ -208,7 +224,7 @@ Possible Micro Instructions:
 	ram out, out in
 	reset counter
 
-11  OUT add:
+1a  OUT add:
 	mem out, ir in
 	pch in, pcl in
 	mem out, marh in
@@ -217,13 +233,13 @@ Possible Micro Instructions:
 	ram out, out in, pch in, pcl in
 	reset counter
 
-12  OUTS:
+1b  OUTS:
 	mem out, ir in
 	pch in, pcl in
 	signed data, signed in
 	reset counter
 
-13  OUTU:
+1c  OUTU:
 	mem out, ir in
 	pch in, pcl in
 	signed in
@@ -236,3 +252,143 @@ ff  HLT:
 	pch in, pcl in
 	hlt
 	reset counter
+
+-----------------------------------------
+Macros
+
+Stack Macros (Stack instructions are slow and heavy, use with moderation)
+
+Memory Map:
+ <- fffa fffb fffc fffd fffe ffff
+   Stack  SPL  SPH oldA oldB oldC
+
+INITSTACK (must be called before being able to use the stack safely):
+	LDAI ff
+	STA fffc
+	LDAI f9
+	STA fffb
+
+PUSHA:
+	STA fffd
+	STB fffe
+	LDCA
+	LDA fffb
+	LDBI 01
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	SUB
+	STA fffc
+	LDA fffb
+	lbl2:
+	SUB
+	STA fffb
+	LDBA
+	LDA fffc
+	STR
+	LDA fffd
+	LDB fffe
+
+PUSHB:
+	STA fffd
+	STB fffe
+	LDCB
+	LDA fffb
+	LDBI 01
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	SUB
+	STA fffc
+	LDA fffb
+	lbl2:
+	SUB
+	STA fffb
+	LDBA
+	LDA fffc
+	STCR
+	LDA fffd
+	LDB fffe
+
+PUSHC:
+	STA fffd
+	STB fffe
+	LDA fffb
+	LDBI 01
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	SUB
+	STA fffc
+	LDA fffb
+	lbl2:
+	SUB
+	STA fffb
+	LDBA
+	LDA fffc
+	STCR
+	LDA fffd
+	LDB fffe
+
+POPA:
+	STA fffd
+	STB fffe
+	LDA fffc
+	LDB fffb
+	LDAR
+	LDAB
+	LDBI 01
+	ADD
+	STA fffb
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	ADD
+	STA fffc
+	lbl2:
+	LDA fffd
+	LDB fffe
+
+POPB:
+	STA fffd
+	STB fffe
+	LDA fffc
+	LDB fffb
+	LDBR
+	LDAB
+	LDBI 01
+	ADD
+	STA fffb
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	ADD
+	STA fffc
+	lbl2:
+	LDA fffd
+	LDB fffe
+
+POPC:
+	STA fffd
+	STB fffe
+	LDA fffc
+	LDB fffb
+	LDCR
+	LDAB
+	LDBI 01
+	ADD
+	STA fffb
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	ADD
+	STA fffc
+	lbl2:
+	LDA fffd
+	LDB fffe
