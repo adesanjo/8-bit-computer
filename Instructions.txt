@@ -58,13 +58,13 @@ v ff      HLT                    Halts the execution of the program
 Possible Micro Instructions:
 
 000001 hlt
-000002 pc in
-000004 pc write
-000008 mem out
-000010 ir in
-000020 out in
-000040 signed data
-000080 signed in
+000002 reset counter
+000004 mem out
+000008 ir in
+000010 pcl write
+000020 pch write
+000040 pcl in
+000080 pch in
 000100 marl in
 000200 marh in
 000400 ram in
@@ -76,50 +76,52 @@ Possible Micro Instructions:
 010000 alu out
 020000 alu op0
 040000 alu op1
-080000 jz
-100000 jnn
-200000 reset counter
+080000 signed data
+100000 signed in
+200000 out in
+400000 jzl
+800000 jzh
 
 00  NOP:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	reset counter
 
 01  LDAI num:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, a in
-	pc in
+	pch in, pcl in
 	reset counter
 
 02  LDBI num:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, b in
-	pc in
+	pch in, pcl in
 	reset counter
 
 03  LDA add:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, marh in
-	pc in
+	pch in, pcl in
 	mem out, marl in
-	ram out, a in, pc in
+	ram out, a in, pch in, pcl in
 	reset counter
 
 04  LDB add:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, marh in
-	pc in
+	pch in, pcl in
 	mem out, marl in
-	ram out, b in, pc in
+	ram out, b in, pch in, pcl in
 	reset counter
 
 05  LDA regadd:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, marh in
 	b out, marl in
 	ram out, a in
@@ -127,7 +129,7 @@ Possible Micro Instructions:
 
 06  LDB regadd:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, marh in
 	b out, marl in
 	ram out, b in
@@ -135,25 +137,25 @@ Possible Micro Instructions:
 
 07  STA add:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, marh in
-	pc in
+	pch in, pcl in
 	mem out, marl in
-	a out, ram in, pc in
+	a out, ram in, pch in, pcl in
 	reset counter
 
 08  STB add:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, marh in
-	pc in
+	pch in, pcl in
 	mem out, marl in
-	b out, ram in, pc in
+	b out, ram in, pch in, pcl in
 	reset counter
 
 09  STA regadd:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, marh in
 	b out, marl in
 	a out, ram in
@@ -161,7 +163,7 @@ Possible Micro Instructions:
 
 0a  STB regadd:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, marh in
 	b out, marl in
 	b out, ram in
@@ -169,38 +171,38 @@ Possible Micro Instructions:
 
 0b  LDAB:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	b out, a in
 	reset counter
 
 0c  LDBA:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, b in
 	reset counter
 
 0d  OUT num:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, out in
-	pc in
+	pch in, pcl in
 	reset counter
 
 0e  OUTA:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, out in
 	reset counter
 
 0f  OUTB:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	b out, out in
 	reset counter
 
 10  OUT regadd:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	a out, marh in
 	b out, marl in
 	ram out, out in
@@ -208,22 +210,22 @@ Possible Micro Instructions:
 
 11  OUT add:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	mem out, marh in
-	pc in
+	pch in, pcl in
 	mem out, marl in
-	ram out, out in, pc in
+	ram out, out in, pch in, pcl in
 	reset counter
 
 12  OUTS:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	signed data, signed in
 	reset counter
 
 13  OUTU:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	signed in
 	reset counter
 
@@ -231,6 +233,6 @@ Possible Micro Instructions:
 
 ff  HLT:
 	mem out, ir in
-	pc in
+	pch in, pcl in
 	hlt
 	reset counter
