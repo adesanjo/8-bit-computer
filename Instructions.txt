@@ -1,3 +1,6 @@
+Immediates are given on 1 byte
+Addresses are given on 2 bytes
+
   Opcode  Instruction  Operands  Description
 
 v 00      NOP
@@ -7,29 +10,47 @@ v 02      LDBI num     num       Loads an immediate to register B
 
 v 03      LDA add      add       Loads value from memory to register A
 v 04      LDB add      add       Loads value from memory to register B
-v 05      LDA Aadd               Loads value from memory to register A
-v 06      LDB Aadd               Loads value from memory to register B
-v 05      LDA Badd               Loads value from memory to register A
-v 06      LDB Badd               Loads value from memory to register B
+v 05      LDA regadd             Loads value from memory to register A
+v 06      LDB regadd             Loads value from memory to register B
 
-v 09      STA add      add       Stores value from register A to memory
-v 0a      STB add      add       Stores value from register B to memory
-v 0b      STA Aadd               Stores value from register A to memory
-v 0c      STB Aadd               Stores value from register B to memory
-v 0d      STA Badd               Stores value from register A to memory
-v 0e      STB Badd               Stores value from register B to memory
+v 07      STA add      add       Stores value from register A to memory
+v 08      STB add      add       Stores value from register B to memory
+v 09      STA regadd             Stores value from register A to memory
+v 0a      STB regadd             Stores value from register B to memory
 
-v 0f      LDAB                   Copies value from register B to register A
-v 10      LDBA                   Copies value from register A to register B
+v 0b      LDAB                   Copies value from register B to register A
+v 0c      LDBA                   Copies value from register A to register B
 
-v 11      OUT num      num       Outputs an immediate
-v 12      OUT A                  Outputs value of register A
-v 13      OUT B                  Outputs value of register B
-v 14      OUT Aadd               Outputs value from memory
-v 15      OUT Badd               Outputs value from memory
-v 16      OUT add      add       Outputs value from memory
-v 17      OUTS                   Set output mode to Signed
-v 18      OUTU                   Set output mode to Unsigned
+v 0d      OUT num      num       Outputs an immediate
+v 0e      OUTA                   Outputs value of register A
+v 0f      OUTB                   Outputs value of register B
+v 10      OUT regadd             Outputs value from memory
+v 11      OUT add      add       Outputs value from memory
+v 12      OUTS                   Set output mode to Signed
+v 13      OUTU                   Set output mode to Unsigned
+
+  14      ADD                    Adds values of A and B and stores result in A
+  15      ADD num      num       Adds values of A and an immediate (in B) and stores result in A
+  16      ADD add      add       Adds values of A and a memory location (in B) and stores result in A
+  17      ADD regadd             Adds values of A and a memory location (in B) and stores result in A
+
+  18      SUB                    Subtracts values of A and B and stores result in A
+  19      SUB num      num       Subtracts values of A and an immediate (in B) and stores result in A
+  1a      SUB add      add       Subtracts values of A and a memory location (in B) and stores result in A
+  1b      SUB regadd             Subtracts values of A and a memory location (in B) and stores result in A
+
+  1c      ROR1                   Rotates right value of A 1 position
+  1d      ROR2                   Rotates right value of A 2 positions
+  1e      ROR3                   Rotates right value of A 3 positions
+  1f      ROR4                   Rotates right value of A 4 positions
+  20      ROR5                   Rotates right value of A 5 positions
+  21      ROR6                   Rotates right value of A 6 positions
+  22      ROR7                   Rotates right value of A 7 positions
+
+  23      NAND                   Nands values of A and B and stores result in A
+  24      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
+  25      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
+  26      NAND regadd            Nands values of A and a memory location (in B) and stores result in A
 
 v ff      HLT                    Halts the execution of the program
 
@@ -44,19 +65,20 @@ Possible Micro Instructions:
 000020 out in
 000040 signed data
 000080 signed in
-000100 mar in
-000200 ram in
-000400 ram out
-000800 a in
-001000 a out
-002000 b in
-004000 b out
-008000 alu out
-010000 alu op0
-020000 alu op1
-040000 jz
-080000 jnn
-100000 reset counter
+000100 marl in
+000200 marh in
+000400 ram in
+000800 ram out
+001000 a in
+002000 a out
+004000 b in
+008000 b out
+010000 alu out
+020000 alu op0
+040000 alu op1
+080000 jz
+100000 jnn
+200000 reset counter
 
 00  NOP:
 	mem out, ir in
@@ -80,146 +102,126 @@ Possible Micro Instructions:
 03  LDA add:
 	mem out, ir in
 	pc in
-	mem out, mar in
+	mem out, marh in
+	pc in
+	mem out, marl in
 	ram out, a in, pc in
 	reset counter
 
 04  LDB add:
 	mem out, ir in
 	pc in
-	mem out, mar in
+	mem out, marh in
+	pc in
+	mem out, marl in
 	ram out, b in, pc in
 	reset counter
 
-05  LDA Aadd:
+05  LDA regadd:
 	mem out, ir in
 	pc in
-	a out, mar in
+	a out, marh in
+	b out, marl in
 	ram out, a in
 	reset counter
 
-06  LDB Aadd:
+06  LDB regadd:
 	mem out, ir in
 	pc in
-	a out, mar in
+	a out, marh in
+	b out, marl in
 	ram out, b in
 	reset counter
 
-07  LDA Badd:
+07  STA add:
 	mem out, ir in
 	pc in
-	b out, mar in
-	ram out, a in
-	reset counter
-
-08  LDB Badd:
-	mem out, ir in
+	mem out, marh in
 	pc in
-	b out, mar in
-	ram out, b in
-	reset counter
-
-09  STA add:
-	mem out, ir in
-	pc in
-	mem out, mar in
+	mem out, marl in
 	a out, ram in, pc in
 	reset counter
 
-0a  STB add:
+08  STB add:
 	mem out, ir in
 	pc in
-	mem out, mar in
+	mem out, marh in
+	pc in
+	mem out, marl in
 	b out, ram in, pc in
 	reset counter
 
-0b  STA Aadd:
+09  STA regadd:
 	mem out, ir in
 	pc in
-	a out, mar in
+	a out, marh in
+	b out, marl in
 	a out, ram in
 	reset counter
 
-0c  STB Aadd:
+0a  STB regadd:
 	mem out, ir in
 	pc in
-	a out, mar in
+	a out, marh in
+	b out, marl in
 	b out, ram in
 	reset counter
 
-0d  STA Badd:
-	mem out, ir in
-	pc in
-	b out, mar in
-	a out, ram in
-	reset counter
-
-0e  STB Badd:
-	mem out, ir in
-	pc in
-	b out, mar in
-	b out, ram in
-	reset counter
-
-0f  LDAB:
+0b  LDAB:
 	mem out, ir in
 	pc in
 	b out, a in
 	reset counter
 
-10  LDBA:
+0c  LDBA:
 	mem out, ir in
 	pc in
 	a out, b in
 	reset counter
 
-11  OUT num:
+0d  OUT num:
 	mem out, ir in
 	pc in
 	mem out, out in
 	pc in
 	reset counter
 
-12  OUT A:
+0e  OUTA:
 	mem out, ir in
 	pc in
 	a out, out in
 	reset counter
 
-13  OUT B:
+0f  OUTB:
 	mem out, ir in
 	pc in
 	b out, out in
 	reset counter
 
-14  OUT Aadd:
+10  OUT regadd:
 	mem out, ir in
 	pc in
-	a out, mar in
+	a out, marh in
+	b out, marl in
 	ram out, out in
 	reset counter
 
-15  OUT Badd:
+11  OUT add:
 	mem out, ir in
 	pc in
-	b out, mar in
-	ram out, out in
-	reset counter
-
-16  OUT add:
-	mem out, ir in
+	mem out, marh in
 	pc in
-	mem out, mar in
+	mem out, marl in
 	ram out, out in, pc in
 	reset counter
 
-17  OUTS:
+12  OUTS:
 	mem out, ir in
 	pc in
 	signed data, signed in
 	reset counter
 
-18  OUTU:
+13  OUTU:
 	mem out, ir in
 	pc in
 	signed in
