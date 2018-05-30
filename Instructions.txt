@@ -22,15 +22,15 @@ v 0a      STBR                   Stores value from register B to memory
 v 0b      LDAB                   Copies value from register B to register A
 v 0c      LDBA                   Copies value from register A to register B
 
-  0d      LDCA                   Copies value from register A to register C
-  0e      LDCB                   Copies value from register B to register C
-  0f      LDAC                   Copies value from register C to register A
-  10      LDBC                   Copies value from register C to register B
-  11      LDCI num     num       Loads an immediate to register C
-  12      LDC add      add       Loads value from memory to register C
-  13      LDCR                   Loads value from memory to register C
-  14      STC add      add       Stores value from register C to memory
-  15      STCR                   Stores value from register C to memory
+v 0d      LDCA                   Copies value from register A to register C
+v 0e      LDCB                   Copies value from register B to register C
+v 0f      LDAC                   Copies value from register C to register A
+v 10      LDBC                   Copies value from register C to register B
+v 11      LDCI num     num       Loads an immediate to register C
+v 12      LDC add      add       Loads value from memory to register C
+v 13      LDCR                   Loads value from memory to register C
+v 14      STC add      add       Stores value from register C to memory
+v 15      STCR                   Stores value from register C to memory
 
 v 16      OUT num      num       Outputs an immediate
 v 17      OUTA                   Outputs value of register A
@@ -40,28 +40,25 @@ v 1a      OUT add      add       Outputs value from memory
 v 1b      OUTS                   Set output mode to Signed
 v 1c      OUTU                   Set output mode to Unsigned
 
-  1d      ADD                    Adds values of A and B and stores result in A
-  1e      ADD num      num       Adds values of A and an immediate (in B) and stores result in A
-  1f      ADD add      add       Adds values of A and a memory location (in B) and stores result in A
-  20      ADDR                   Adds values of A and a memory location (in B) and stores result in A
+v 1d      ADD                    Adds values of A and B and stores result in A
+v 1e      ADD num      num       Adds values of A and an immediate (in B) and stores result in A
+v 1f      ADD add      add       Adds values of A and a memory location (in B) and stores result in A
 
-  21      SUB                    Subtracts values of A and B and stores result in A
-  22      SUB num      num       Subtracts values of A and an immediate (in B) and stores result in A
-  23      SUB add      add       Subtracts values of A and a memory location (in B) and stores result in A
-  24      SUBR                   Subtracts values of A and a memory location (in B) and stores result in A
+v 20      SUB                    Subtracts values of A and B and stores result in A
+v 21      SUB num      num       Subtracts values of A and an immediate (in B) and stores result in A
+v 22      SUB add      add       Subtracts values of A and a memory location (in B) and stores result in A
 
-  25      ROR1                   Rotates right value of A 1 position
-  26      ROR2                   Rotates right value of A 2 positions
-  27      ROR3                   Rotates right value of A 3 positions
-  28      ROR4                   Rotates right value of A 4 positions
-  29      ROR5                   Rotates right value of A 5 positions
-  2a      ROR6                   Rotates right value of A 6 positions
-  2b      ROR7                   Rotates right value of A 7 positions
+v 23      ROR1                   Rotates right value of A 1 position
+v 24      ROR2                   Rotates right value of A 2 positions
+v 25      ROR3                   Rotates right value of A 3 positions
+v 26      ROR4                   Rotates right value of A 4 positions
+v 27      ROR5                   Rotates right value of A 5 positions
+v 28      ROR6                   Rotates right value of A 6 positions
+v 29      ROR7                   Rotates right value of A 7 positions
 
-  2c      NAND                   Nands values of A and B and stores result in A
-  2d      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
-  2e      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
-  2f      NANDR                  Nands values of A and a memory location (in B) and stores result in A
+v 2a      NAND                   Nands values of A and B and stores result in A
+v 2b      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
+v 2c      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
 
 v ff      HLT                    Halts the execution of the program
 
@@ -195,7 +192,70 @@ Possible Micro Instructions:
 	a out, b in
 	reset counter
 
+0d  LDCA:
+	mem out, ir in
+	pch in, pcl in
+	a out, c in
+	reset counter
 
+0e  LDCB:
+	mem out, ir in
+	pch in, pcl in
+	b out, c in
+	reset counter
+
+0f  LDAC:
+	mem out, ir in
+	pch in, pcl in
+	c out, a in
+	reset counter
+
+10  LDBC:
+	mem out, ir in
+	pch in, pcl in
+	c out, b in
+	reset counter
+
+11  LDCI num:
+	mem out, ir in
+	pch in, pcl in
+	mem out, c in
+	pch in, pcl in
+	reset counter
+
+12  LDC add:
+	mem out, ir in
+	pch in, pcl in
+	mem out, marh in
+	pch in, pcl in
+	mem out, marl in
+	ram out, c in, pch in, pcl in
+	reset counter
+
+13  LDCR:
+	mem out, ir in
+	pch in, pcl in
+	a out, marh in
+	b out, marl in
+	ram out, c in
+	reset counter
+
+14  STC add:
+	mem out, ir in
+	pch in, pcl in
+	mem out, marh in
+	pch in, pcl in
+	mem out, marl in
+	c out, ram in, pch in, pcl in
+	reset counter
+
+15  STCR:
+	mem out, ir in
+	pch in, pcl in
+	a out, marh in
+	b out, marl in
+	c out, ram in
+	reset counter
 
 16  OUT num:
 	mem out, ir in
@@ -245,7 +305,137 @@ Possible Micro Instructions:
 	signed in
 	reset counter
 
+1d  ADD:
+	mem out, ir in
+	pch in, pcl in
+	alu out, a in
+	reset counter
 
+1e  ADD num:
+	mem out, ir in
+	pch in, pcl in
+	mem out, b in
+	alu out, a in, pch in, pcl in
+	reset counter
+
+1f  ADD add:
+	mem out, ir in
+	pch in, pcl in
+	mem out, marh in
+	pch in, pcl in
+	mem out, marl in
+	ram out, b in, pch in, pcl in
+	alu out, a in
+	reset counter
+
+20  SUB:
+	mem out, ir in
+	pch in, pcl in
+	alu op0, alu out, a in
+	reset counter
+
+21  SUB num:
+	mem out, ir in
+	pch in, pcl in
+	mem out, b in
+	alu op0, alu out, a in, pch in, pcl in
+	reset counter
+
+22  SUB add:
+	mem out, ir in
+	pch in, pcl in
+	mem out, marh in
+	pch in, pcl in
+	mem out, marl in
+	ram out, b in, pch in, pcl in
+	alu op0, alu out, a in
+	reset counter
+
+23  ROR1:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	reset counter
+
+24  ROR2:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	reset counter
+
+25  ROR3:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	reset counter
+
+26  ROR4:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	reset counter
+
+27  ROR5:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	reset counter
+
+28  ROR6:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	reset counter
+
+29  ROR7:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	alu op1, alu out, a in
+	reset counter
+
+2a  NAND:
+	mem out, ir in
+	pch in, pcl in
+	alu op1, alu op0, alu out, a in
+	reset counter
+
+2b  NAND num:
+	mem out, ir in
+	pch in, pcl in
+	mem out, b in
+	alu op1, alu op0, alu out, a in, pch in, pcl in
+	reset counter
+
+2c  NAND add:
+	mem out, ir in
+	pch in, pcl in
+	mem out, marh in
+	pch in, pcl in
+	mem out, marl in
+	ram out, b in, pch in, pcl in
+	alu op1, alu op0, alu out, a in
+	reset counter
 
 ff  HLT:
 	mem out, ir in
@@ -256,139 +446,278 @@ ff  HLT:
 -----------------------------------------
 Macros
 
-Stack Macros (Stack instructions are slow and heavy, use with moderation)
-
 Memory Map:
  <- fffa fffb fffc fffd fffe ffff
    Stack  SPL  SPH oldA oldB oldC
 
+
+
+Shift and rotation Macros
+
+ROL1:
+	ROR7
+
+ROL2:
+	ROR6
+
+ROL3:
+	ROR5
+
+ROL4:
+	ROR4
+
+ROL5:
+	ROR3
+
+ROL6:
+	ROR2
+
+ROL7:
+	ROR1
+
+SHR1:
+	ROR1
+	STB *fffe
+	NAND 7f
+	LDBA
+	NAND
+	LDB *fffe
+
+SHR2:
+	ROR2
+	STB *fffe
+	NAND 3f
+	LDBA
+	NAND
+	LDB *fffe
+
+SHR3:
+	ROR3
+	STB *fffe
+	NAND 1f
+	LDBA
+	NAND
+	LDB *fffe
+
+SHR4:
+	ROR4
+	STB *fffe
+	NAND f
+	LDBA
+	NAND
+	LDB *fffe
+
+SHR5:
+	ROR5
+	STB *fffe
+	NAND 7
+	LDBA
+	NAND
+	LDB *fffe
+
+SHR6:
+	ROR6
+	STB *fffe
+	NAND 3
+	LDBA
+	NAND
+	LDB *fffe
+
+SHR7:
+	ROR7
+	STB *fffe
+	NAND 1
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL1:
+	ROR7
+	STB *fffe
+	NAND fe
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL2:
+	ROR6
+	STB *fffe
+	NAND fc
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL3:
+	ROR5
+	STB *fffe
+	NAND f8
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL4:
+	ROR4
+	STB *fffe
+	NAND f0
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL5:
+	ROR3
+	STB *fffe
+	NAND e0
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL6:
+	ROR2
+	STB *fffe
+	NAND c0
+	LDBA
+	NAND
+	LDB *fffe
+
+SHL7:
+	ROR1
+	STB *fffe
+	NAND 80
+	LDBA
+	NAND
+	LDB *fffe
+
+
+
+Stack Macros (Stack instructions are slow and heavy, use with moderation)
+
 INITSTACK (must be called before being able to use the stack safely):
 	LDAI ff
-	STA fffc
+	STA *fffc
 	LDAI f9
-	STA fffb
+	STA *fffb
 
 PUSHA:
-	STA fffd
-	STB fffe
+	STA *fffd
+	STB *fffe
 	LDCA
-	LDA fffb
-	LDBI 01
+	LDA *fffb
+	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA *fffc
 	SUB
-	STA fffc
-	LDA fffb
+	STA *fffc
+	LDA *fffb
 	lbl2:
 	SUB
-	STA fffb
+	STA *fffb
 	LDBA
-	LDA fffc
+	LDA *fffc
 	STR
-	LDA fffd
-	LDB fffe
+	LDA *fffd
+	LDB *fffe
 
 PUSHB:
-	STA fffd
-	STB fffe
+	STA *fffd
+	STB *fffe
 	LDCB
-	LDA fffb
-	LDBI 01
+	LDA *fffb
+	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA *fffc
 	SUB
-	STA fffc
-	LDA fffb
+	STA *fffc
+	LDA *fffb
 	lbl2:
 	SUB
-	STA fffb
+	STA *fffb
 	LDBA
-	LDA fffc
+	LDA *fffc
 	STCR
-	LDA fffd
-	LDB fffe
+	LDA *fffd
+	LDB *fffe
 
 PUSHC:
-	STA fffd
-	STB fffe
-	LDA fffb
-	LDBI 01
+	STA *fffd
+	STB *fffe
+	LDA *fffb
+	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA *fffc
 	SUB
-	STA fffc
-	LDA fffb
+	STA *fffc
+	LDA *fffb
 	lbl2:
 	SUB
-	STA fffb
+	STA *fffb
 	LDBA
-	LDA fffc
+	LDA *fffc
 	STCR
-	LDA fffd
-	LDB fffe
+	LDA *fffd
+	LDB *fffe
 
 POPA:
-	STA fffd
-	STB fffe
-	LDA fffc
-	LDB fffb
+	STA *fffd
+	STB *fffe
+	LDA *fffc
+	LDB *fffb
 	LDAR
 	LDAB
-	LDBI 01
+	LDBI 1
 	ADD
-	STA fffb
+	STA *fffb
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA *fffc
 	ADD
-	STA fffc
+	STA *fffc
 	lbl2:
-	LDA fffd
-	LDB fffe
+	LDA *fffd
+	LDB *fffe
 
 POPB:
-	STA fffd
-	STB fffe
-	LDA fffc
-	LDB fffb
+	STA *fffd
+	STB *fffe
+	LDA *fffc
+	LDB *fffb
 	LDBR
 	LDAB
-	LDBI 01
+	LDBI 1
 	ADD
-	STA fffb
+	STA *fffb
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA *fffc
 	ADD
-	STA fffc
+	STA *fffc
 	lbl2:
-	LDA fffd
-	LDB fffe
+	LDA *fffd
+	LDB *fffe
 
 POPC:
-	STA fffd
-	STB fffe
-	LDA fffc
-	LDB fffb
+	STA *fffd
+	STB *fffe
+	LDA *fffc
+	LDB *fffb
 	LDCR
 	LDAB
-	LDBI 01
+	LDBI 1
 	ADD
-	STA fffb
+	STA *fffb
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA *fffc
 	ADD
-	STA fffc
+	STA *fffc
 	lbl2:
-	LDA fffd
-	LDB fffe
+	LDA *fffd
+	LDB *fffe
