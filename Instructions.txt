@@ -60,6 +60,9 @@ v 2a      NAND                   Nands values of A and B and stores result in A
 v 2b      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
 v 2c      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
 
+v 2d      JMP lbl      lbl       Jumps to specified label (uses C register)
+v 2e      JZ lbl       lbl       Jumps to specified label if A == 0 (uses C register)
+
 v ff      HLT                    Halts the execution of the program
 
 -----------------------------------
@@ -437,6 +440,24 @@ Possible Micro Instructions:
 	alu op1, alu op0, alu out, a in
 	reset counter
 
+2d  JMP lbl:
+	mem out, ir in
+	pch in, pcl in
+	mem out, c in
+	pch in, pcl in
+	mem out, pcl write, pcl in
+	c out, pch write, pch in
+	reset counter
+
+2e  JZ lbl:
+	mem out, ir in
+	pch in, pcl in
+	mem out, c in
+	pch in, pcl in
+	mem out, pcl write, jzl
+	c out, pch write, jzh
+	reset counter
+
 ff  HLT:
 	mem out, ir in
 	pch in, pcl in
@@ -447,8 +468,31 @@ ff  HLT:
 Macros
 
 Memory Map:
- <- fffa fffb fffc fffd fffe ffff
-   Stack  SPL  SPH oldA oldB oldC
+ <- *fffa *fffb *fffc *fffd *fffe *ffff
+    Stack  SPL   SPH   oldA  oldB  oldC
+
+Jump Macros (Use C register for the actual jumps)
+
+JNZ lbl:
+	JZ lbl1
+	JMP lbl
+	lbl1:
+
+JGZ lbl:  (Also Changes A and B registers)
+	JZ lbl1
+	NAND 7f
+	LDBA
+	NAND
+	JZ lbl
+	lbl1:
+
+JLZ lbl:  (Also Changes A and B registers)
+	NAND 7f
+	LDBA
+	NAND
+	JZ lbl1
+	JMP lbl
+	lbl1:
 
 
 
