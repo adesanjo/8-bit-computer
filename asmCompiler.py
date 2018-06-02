@@ -187,7 +187,15 @@ def findLabelsAndVariables(code,labels,variables):
             address+=3
 
 def compileInstruction(inst,compiled):
-    pass
+    if inst[0] in oneByteInstructions:
+        compiled.append(oneByteInstructions[inst[0]])
+    elif inst[0] in twoBytesInstructions:
+        compiled.append(twoBytesInstructions[inst[0]])
+        compiled.append(hex(evalNum(inst[1]))[2:])
+    elif inst[0] in threeBytesInstructions:
+        compiled.append(threeBytesInstructions[inst[0]])
+        compiled.append(hex(evalNum(inst[1],2)>>8)[2:])
+        compiled.append(hex(evalNum(inst[1],2)&0xff)[2:])
 
 if __name__=="__main__":
     if len(sys.argv)<2:
