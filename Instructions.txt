@@ -32,7 +32,7 @@ v 13      LDCR                   Loads value from memory to register C
 v 14      STC add      add       Stores value from register C to memory
 v 15      STCR                   Stores value from register C to memory
 
-v 16      OUT num      num       Outputs an immediate
+v 16      OUTI num     num       Outputs an immediate
 v 17      OUTA                   Outputs value of register A
 v 18      OUTB                   Outputs value of register B
 v 19      OUTR                   Outputs value from memory
@@ -40,12 +40,12 @@ v 1a      OUT add      add       Outputs value from memory
 v 1b      OUTS                   Set output mode to Signed
 v 1c      OUTU                   Set output mode to Unsigned
 
-v 1d      ADD                    Adds values of A and B and stores result in A
-v 1e      ADD num      num       Adds values of A and an immediate (in B) and stores result in A
+v 1d      ADDR                   Adds values of A and B and stores result in A
+v 1e      ADDI num     num       Adds values of A and an immediate (in B) and stores result in A
 v 1f      ADD add      add       Adds values of A and a memory location (in B) and stores result in A
 
-v 20      SUB                    Subtracts values of A and B and stores result in A
-v 21      SUB num      num       Subtracts values of A and an immediate (in B) and stores result in A
+v 20      SUBR                   Subtracts values of A and B and stores result in A
+v 21      SUBI num     num       Subtracts values of A and an immediate (in B) and stores result in A
 v 22      SUB add      add       Subtracts values of A and a memory location (in B) and stores result in A
 
 v 23      ROR1                   Rotates right value of A 1 position
@@ -56,8 +56,8 @@ v 27      ROR5                   Rotates right value of A 5 positions
 v 28      ROR6                   Rotates right value of A 6 positions
 v 29      ROR7                   Rotates right value of A 7 positions
 
-v 2a      NAND                   Nands values of A and B and stores result in A
-v 2b      NAND num     num       Nands values of A and an immediate (in B) and stores result in A
+v 2a      NANDR                  Nands values of A and B and stores result in A
+v 2b      NANDI num    num       Nands values of A and an immediate (in B) and stores result in A
 v 2c      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
 
 v 2d      JMP lbl      lbl       Jumps to specified label (uses C register)
@@ -260,7 +260,7 @@ Possible Micro Instructions:
 	c out, ram in
 	reset counter
 
-16  OUT num:
+16  OUTI num:
 	mem out, ir in
 	pch in, pcl in
 	mem out, out in
@@ -279,7 +279,7 @@ Possible Micro Instructions:
 	b out, out in
 	reset counter
 
-19  OUT regadd:
+19  OUTR:
 	mem out, ir in
 	pch in, pcl in
 	a out, marh in
@@ -308,13 +308,13 @@ Possible Micro Instructions:
 	signed in
 	reset counter
 
-1d  ADD:
+1d  ADDR:
 	mem out, ir in
 	pch in, pcl in
 	alu out, a in
 	reset counter
 
-1e  ADD num:
+1e  ADDI num:
 	mem out, ir in
 	pch in, pcl in
 	mem out, b in
@@ -331,13 +331,13 @@ Possible Micro Instructions:
 	alu out, a in
 	reset counter
 
-20  SUB:
+20  SUBR:
 	mem out, ir in
 	pch in, pcl in
 	alu op0, alu out, a in
 	reset counter
 
-21  SUB num:
+21  SUBI num:
 	mem out, ir in
 	pch in, pcl in
 	mem out, b in
@@ -417,13 +417,13 @@ Possible Micro Instructions:
 	alu op1, alu out, a in
 	reset counter
 
-2a  NAND:
+2a  NANDR:
 	mem out, ir in
 	pch in, pcl in
 	alu op1, alu op0, alu out, a in
 	reset counter
 
-2b  NAND num:
+2b  NANDI num:
 	mem out, ir in
 	pch in, pcl in
 	mem out, b in
@@ -468,8 +468,8 @@ ff  HLT:
 Macros
 
 Memory Map:
- <- *fffa *fffb *fffc *fffd *fffe *ffff
-    Stack  SPL   SPH   oldA  oldB  oldC
+ <-  fffa  fffb  fffc  fffd  fffe  ffff
+    Stack   SPL   SPH  oldA  oldB  oldC
 
 Jump Macros (Use C register for the actual jumps)
 
@@ -480,16 +480,16 @@ JNZ lbl:
 
 JGZ lbl:  (Also Changes A and B registers)
 	JZ lbl1
-	NAND 7f
+	NANDI 7f
 	LDBA
-	NAND
+	NANDR
 	JZ lbl
 	lbl1:
 
 JLZ lbl:  (Also Changes A and B registers)
-	NAND 7f
+	NANDI 7f
 	LDBA
-	NAND
+	NANDR
 	JZ lbl1
 	JMP lbl
 	lbl1:
@@ -521,247 +521,252 @@ ROL7:
 
 SHR1:
 	ROR1
-	STB *fffe
-	NAND 7f
+	STB fffe
+	NANDI 7f
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHR2:
 	ROR2
-	STB *fffe
-	NAND 3f
+	STB fffe
+	NANDI 3f
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHR3:
 	ROR3
-	STB *fffe
-	NAND 1f
+	STB fffe
+	NANDI 1f
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHR4:
 	ROR4
-	STB *fffe
-	NAND f
+	STB fffe
+	NANDI f
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHR5:
 	ROR5
-	STB *fffe
-	NAND 7
+	STB fffe
+	NANDI 7
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHR6:
 	ROR6
-	STB *fffe
-	NAND 3
+	STB fffe
+	NANDI 3
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHR7:
 	ROR7
-	STB *fffe
-	NAND 1
+	STB fffe
+	NANDI 1
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL1:
 	ROR7
-	STB *fffe
-	NAND fe
+	STB fffe
+	NANDI fe
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL2:
 	ROR6
-	STB *fffe
-	NAND fc
+	STB fffe
+	NANDI fc
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL3:
 	ROR5
-	STB *fffe
-	NAND f8
+	STB fffe
+	NANDI f8
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL4:
 	ROR4
-	STB *fffe
-	NAND f0
+	STB fffe
+	NANDI f0
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL5:
 	ROR3
-	STB *fffe
-	NAND e0
+	STB fffe
+	NANDI e0
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL6:
 	ROR2
-	STB *fffe
-	NAND c0
+	STB fffe
+	NANDI c0
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 SHL7:
 	ROR1
-	STB *fffe
-	NAND 80
+	STB fffe
+	NANDI 80
 	LDBA
-	NAND
-	LDB *fffe
+	NANDR
+	LDB fffe
 
 
 
 Stack Macros (Stack instructions are slow and heavy, use with moderation)
 
 INITSTACK (must be called before being able to use the stack safely):
+	STA fffd
 	LDAI ff
-	STA *fffc
-	LDAI f9
-	STA *fffb
+	STA fffc
+	LDAI fa
+	STA fffb
+	LDA fffd
 
 PUSHA:
-	STA *fffd
-	STB *fffe
+	STA fffd
+	STB fffe
+	STC ffff
 	LDCA
-	LDA *fffb
+	LDA fffb
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA *fffc
-	SUB
-	STA *fffc
-	LDA *fffb
+	LDA fffc
+	SUBR
+	STA fffc
+	LDA fffb
 	lbl2:
-	SUB
-	STA *fffb
+	SUBR
+	STA fffb
 	LDBA
-	LDA *fffc
-	STR
-	LDA *fffd
-	LDB *fffe
+	LDA fffc
+	STCR
+	LDA fffd
+	LDB fffe
+	LDC ffff
 
 PUSHB:
-	STA *fffd
-	STB *fffe
+	STA fffd
+	STB fffe
+	STC ffff
 	LDCB
-	LDA *fffb
+	LDA fffb
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA *fffc
-	SUB
-	STA *fffc
-	LDA *fffb
+	LDA fffc
+	SUBR
+	STA fffc
+	LDA fffb
 	lbl2:
-	SUB
-	STA *fffb
+	SUBR
+	STA fffb
 	LDBA
-	LDA *fffc
+	LDA fffc
 	STCR
-	LDA *fffd
-	LDB *fffe
+	LDA fffd
+	LDB fffe
+	LDC ffff
 
 PUSHC:
-	STA *fffd
-	STB *fffe
-	LDA *fffb
+	STA fffd
+	STB fffe
+	LDA fffb
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA *fffc
-	SUB
-	STA *fffc
-	LDA *fffb
+	LDA fffc
+	SUBR
+	STA fffc
+	LDA fffb
 	lbl2:
-	SUB
-	STA *fffb
+	SUBR
+	STA fffb
 	LDBA
-	LDA *fffc
+	LDA fffc
 	STCR
-	LDA *fffd
-	LDB *fffe
+	LDA fffd
+	LDB fffe
 
 POPA:
-	STA *fffd
-	STB *fffe
-	LDA *fffc
-	LDB *fffb
-	LDAR
-	LDAB
-	LDBI 1
-	ADD
-	STA *fffb
-	JZ lbl1
-	JMP lbl2
-	lbl1:
-	LDA *fffc
-	ADD
-	STA *fffc
-	lbl2:
-	LDA *fffd
-	LDB *fffe
-
-POPB:
-	STA *fffd
-	STB *fffe
-	LDA *fffc
-	LDB *fffb
-	LDBR
-	LDAB
-	LDBI 1
-	ADD
-	STA *fffb
-	JZ lbl1
-	JMP lbl2
-	lbl1:
-	LDA *fffc
-	ADD
-	STA *fffc
-	lbl2:
-	LDA *fffd
-	LDB *fffe
-
-POPC:
-	STA *fffd
-	STB *fffe
-	LDA *fffc
-	LDB *fffb
+	STB fffe
+	STC ffff
+	LDA fffc
+	LDB fffb
 	LDCR
 	LDAB
-	LDBI 1
-	ADD
-	STA *fffb
+	ADDI 1
+	STA fffb
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA *fffc
-	ADD
-	STA *fffc
+	LDA fffc
+	ADDR
+	STA fffc
 	lbl2:
-	LDA *fffd
-	LDB *fffe
+	LDAC
+	LDB fffe
+	LDC ffff
+
+POPB:
+	STA fffd
+	STC ffff
+	LDA fffc
+	LDB fffb
+	LDCR
+	LDAB
+	ADDI 1
+	STA fffb
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	ADDR
+	STA fffc
+	lbl2:
+	LDBC
+	LDA fffd
+	LDC ffff
+
+POPC:
+	STA fffd
+	STB fffe
+	LDA fffc
+	LDB fffb
+	LDCR
+	LDAB
+	ADDI 1
+	STA fffb
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	ADDR
+	STA fffc
+	lbl2:
+	LDA fffd
+	LDB fffe
