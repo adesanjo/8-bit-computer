@@ -63,6 +63,9 @@ v 2c      NAND add     add       Nands values of A and a memory location (in B) 
 v 2d      JMP lbl      lbl       Jumps to specified label (uses C register)
 v 2e      JZ lbl       lbl       Jumps to specified label if A == 0 (uses C register)
 
+v 2f      STPC                   Copies value from PC to A and B
+v 30      LDPC                   Copies value from A and B to PC
+
 v ff      HLT                    Halts the execution of the program
 
 -----------------------------------
@@ -95,6 +98,8 @@ Possible Micro Instructions:
 00800000 jzh
 01000000 c in
 02000000 c out
+04000000 pcl out
+08000000 pch out
 
 00  NOP:
 	mem out, ir in
@@ -456,6 +461,20 @@ Possible Micro Instructions:
 	pch in, pcl in
 	mem out, pcl write, jzl
 	c out, pch write, jzh
+	reset counter
+
+2f  STPC:
+	mem out, ir in
+	pch in, pcl in
+	pch out, a in
+	pcl out, b in
+	reset counter
+
+30  LDPC:
+	mem out, ir in
+	pch in, pcl in
+	a out, pch write, pch in
+	b out, pcl write, pcl in
 	reset counter
 
 ff  HLT:
