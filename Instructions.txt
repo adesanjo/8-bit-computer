@@ -138,7 +138,7 @@ Possible Micro Instructions:
 	ram out, b in, pch in, pcl in
 	reset counter
 
-05  LDA regadd:
+05  LDAR:
 	mem out, ir in
 	pch in, pcl in
 	a out, marh in
@@ -146,7 +146,7 @@ Possible Micro Instructions:
 	ram out, a in
 	reset counter
 
-06  LDB regadd:
+06  LDBR:
 	mem out, ir in
 	pch in, pcl in
 	a out, marh in
@@ -172,7 +172,7 @@ Possible Micro Instructions:
 	b out, ram in, pch in, pcl in
 	reset counter
 
-09  STA regadd:
+09  STAR:
 	mem out, ir in
 	pch in, pcl in
 	a out, marh in
@@ -180,7 +180,7 @@ Possible Micro Instructions:
 	a out, ram in
 	reset counter
 
-0a  STB regadd:
+0a  STBR:
 	mem out, ir in
 	pch in, pcl in
 	a out, marh in
