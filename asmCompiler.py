@@ -163,8 +163,10 @@ def compileCode(code):
     evalMacros(code)
 
     labels={}
-    variables={}
+    variables={"#SPL":"fffb","#SPH":"fffc","#A":"fffd","#B":"fffe","#C":"ffff"}
     findLabelsAndVariables(code,labels,variables)
+    replaceLabels(code,labels)
+    replaceVariables(code,variables)
 
     for inst in code:
         compileInstruction(inst,compiled)
@@ -176,7 +178,7 @@ def evalNum(num,b=1):
     n=int(num,16)
     while n<0:
         n+=256**b
-    while n>=256:
+    while n>=256**b:
         n-=256**b
     return n
 
@@ -184,15 +186,25 @@ def findLabelsAndVariables(code,labels,variables):
     address=0
     for inst in code:
         if inst[0][0]=="*":
-            variables[inst[0]]=evalNum(inst[1])
+            variables[inst[0]]=hex(evalNum(inst[1],2))[2:]
         elif inst[0][-1]==":":
-            labels[inst[0][:-1]]=address
+            labels[inst[0][:-1]]=hex(address)[2:]
         elif inst[0] in oneByteInstructions:
             address+=1
         elif inst[0] in twoBytesInstructions:
             address+=2
         elif inst[0] in threeBytesInstructions:
             address+=3
+
+def replaceLabels(code,labels):
+    for i in range(len(code)):
+        if len(code[i])>1 and code[i][1] in labels:
+            code[i][1]=labels[code[i][1]]
+
+def replaceVariables(code,variables):
+    for i in range(len(code)):
+        if len(code[i])>1 and code[i][1] in variables:
+            code[i][1]=variables[code[i][1]]
 
 def compileInstruction(inst,compiled):
     if inst[0] in oneByteInstructions:

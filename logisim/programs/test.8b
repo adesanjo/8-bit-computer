@@ -1,0 +1,84 @@
+INITSTACK
+LDAI 5
+PUSHA
+CALL fact
+LDAC
+OUTU
+OUTA
+HLT
+
+fact:
+	STA #A
+	STB #B
+	LDAB
+	ADDI 1
+	STA #B
+	JZ carryf
+	JMP noCarryf
+	carryf:
+	LDA #A
+	ADDR
+	STA #A
+	noCarryf:
+	LDA #A
+	LDB #B
+	LDAR
+	JZ fact0
+	PUSHA
+	SUBI 1
+	PUSHA
+	CALL fact
+	POPA
+	PUSHC
+	CALL mul
+	POPA
+	POPA
+	RET
+	fact0:
+	LDCI 1
+	RET
+
+mul:
+	STA #A
+	STB #B
+	LDAB
+	ADDI 1
+	STA #B
+	JZ carrym1
+	JMP noCarrym1
+	carrym1:
+	LDA #A
+	ADDR
+	STA #A
+	noCarrym1:
+	LDA #A
+	LDB #B
+	LDAR
+	STA #C
+	LDAB
+	ADDI 1
+	STA #B
+	JZ carrym2
+	JMP noCarrym2
+	carrym2:
+	LDA #A
+	ADDR
+	STA #A
+	noCarrym2:
+	LDA #A
+	LDB #B
+	LDAR
+	STA #A
+	LDAI 0
+	STA #B
+	LDA #A
+	loop:
+		JZ done
+		LDA #B
+		ADD #C
+		LDA #A
+		SUBI 1
+		JMP loop
+	done:
+	LDC #B
+	RET
