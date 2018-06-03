@@ -789,3 +789,74 @@ POPC:
 	lbl2:
 	LDA fffd
 	LDB fffe
+
+CALL lbl:  (Uses all three registers)
+	STPC
+	LDCA
+	LDA fffb
+	LDBI 1
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	SUBR
+	STA fffc
+	LDA fffb
+	lbl2:
+	SUBR
+	STA fffb
+	LDBA
+	LDA fffc
+	STCR
+	STPC
+	LDCB
+	LDA fffb
+	LDBI 1
+	JZ lbl3
+	JMP lbl4
+	lbl3:
+	LDA fffc
+	SUBR
+	STA fffc
+	LDA fffb
+	lbl4:
+	SUBR
+	STA fffb
+	LDBA
+	LDA fffc
+	STCR
+	JMP lbl
+
+RET:  (Uses registers A and B, register C is used for return value)
+	STC ffff
+	LDA fffc
+	LDB fffb
+	LDCR
+	LDAB
+	ADDI 1
+	STA fffb
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA fffc
+	ADDR
+	STA fffc
+	lbl2:
+	STC fffe
+	LDA fffc
+	LDB fffb
+	LDCR
+	LDAB
+	ADDI 1
+	STA fffb
+	JZ lbl3
+	JMP lbl4
+	lbl3:
+	LDA fffc
+	ADDR
+	STA fffc
+	lbl4:
+	LDAC
+	LDB fffe
+	LDPC
+	LDC ffff

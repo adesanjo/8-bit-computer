@@ -30,7 +30,9 @@ oneByteInstructions={"NOP":"00",
                      "ROR6":"28",
                      "ROR7":"29",
                      "NANDR":"2a",
-                     "HLT":"ff"}
+                     "STPC":"2f",
+                     "LDPC":"30",
+                     "HLT":"ff",}
 
 twoBytesInstructions={"LDAI":"01",
                       "LDBI":"02",
@@ -146,12 +148,18 @@ def evalMacros(code):
         elif inst[0]=="POPC":
             code[i:i+1]=[["STA","fffd"],["STB","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["LDA","fffd"],["STB","fffe"]]
             lbl+=1
+        elif inst[0]=="CALL":
+            code[i:i+1]=[["STPC"],["LDCA"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"b:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["STPC"],["LDCB"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"d:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["JMP",inst[1]]]
+            lbl+=1
+        elif inst[0]=="RET":
+            code[i:i+1]=[["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["STC","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"d:"],["LDAC"],["LDB","fffe"],["LDPC"],["LDC","ffff"]]
+            lbl+=1
 
 def compileCode(code):
     compiledCode="v2.0 raw\n"
     compiled=[]
 
-    code=[c.strip().split() for c in code.splitlines() if c.strip()!="" and c.strip()[0]!=";"]
+    code=[c.upper().strip().split() if ";" not in c else c[:c.index(";")].upper().strip().split() for c in code.splitlines() if c.strip()!="" and c.strip()[0]!=";"]
     evalMacros(code)
 
     labels={}
