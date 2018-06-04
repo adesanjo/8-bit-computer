@@ -5226,24 +5226,35 @@ c0 a0 50 2 11*0 c c0 2
     <comp lib="4" loc="(1820,1270)" name="ROM">
       <a name="addrWidth" val="15"/>
       <a name="contents">addr/data: 15 8
-1 f1 7 ff fd 1a ff fd
-2f d 3 ff fb 2 1 2e
-0 15 2d 0 1f 3 ff fc
-20 7 ff fc 3 ff fb 20
-7 ff fb c 3 ff fc 15
-2f e 3 ff fb 2 1 2e
-0 35 2d 0 3f 3 ff fc
-20 7 ff fc 3 ff fb 20
-7 ff fb c 3 ff fc 15
-2d 0 4c ff 1b 14 ff ff
-3 ff fc 4 ff fb 13 b
-1e 1 7 ff fb 2e 0 63
-2d 0 6a 3 ff fc 1d 7
-ff fc 14 ff fe 3 ff fc
-4 ff fb 13 b 1e 1 7
-ff fb 2e 0 80 2d 0 87
-3 ff fc 1d 7 ff fc f
-4 ff fe 30 12 ff ff
+7 ff fd ff 1 ff ff 7
+ff fc ff 1 fa ff 7 ff
+fb ff 3 ff fd ff 1 f1
+ff 7 ff fd ff 1a ff fd
+ff 2f ff d ff 3 ff fb
+ff 2 1 ff 2e 0 34 ff
+2d 0 42 ff 3 ff fc ff
+20 ff 7 ff fc ff 3 ff
+fb ff 20 ff 7 ff fb ff
+c ff 3 ff fc ff 15 ff
+2f ff e ff 3 ff fb ff
+2 1 ff 2e 0 63 ff 2d
+0 71 ff 3 ff fc ff 20
+ff 7 ff fc ff 3 ff fb
+ff 20 ff 7 ff fb ff c
+ff 3 ff fc ff 15 ff 2d
+0 85 ff ff ff 1b ff 14
+ff ff ff 3 ff fc ff 4
+ff fb ff 13 ff b ff 1e
+1 ff 7 ff fb ff 2e 0
+a6 ff 2d 0 b0 ff 3 ff
+fc ff 1d ff 7 ff fc ff
+14 ff fe ff 3 ff fc ff
+4 ff fb ff 13 ff b ff
+1e 1 ff 7 ff fb ff 2e
+0 cf ff 2d 0 d9 ff 3
+ff fc ff 1d ff 7 ff fc
+ff f ff 4 ff fe ff 30
+ff 12 ff ff ff
 </a>
     </comp>
     <comp lib="0" loc="(500,3950)" name="Tunnel">

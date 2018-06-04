@@ -540,323 +540,368 @@ ROL7:
 
 SHR1:
 	ROR1
-	STB fffe
+	STB #B
 	NANDI 7f
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHR2:
 	ROR2
-	STB fffe
+	STB #B
 	NANDI 3f
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHR3:
 	ROR3
-	STB fffe
+	STB #B
 	NANDI 1f
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHR4:
 	ROR4
-	STB fffe
+	STB #B
 	NANDI f
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHR5:
 	ROR5
-	STB fffe
+	STB #B
 	NANDI 7
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHR6:
 	ROR6
-	STB fffe
+	STB #B
 	NANDI 3
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHR7:
 	ROR7
-	STB fffe
+	STB #B
 	NANDI 1
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL1:
 	ROR7
-	STB fffe
+	STB #B
 	NANDI fe
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL2:
 	ROR6
-	STB fffe
+	STB #B
 	NANDI fc
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL3:
 	ROR5
-	STB fffe
+	STB #B
 	NANDI f8
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL4:
 	ROR4
-	STB fffe
+	STB #B
 	NANDI f0
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL5:
 	ROR3
-	STB fffe
+	STB #B
 	NANDI e0
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL6:
 	ROR2
-	STB fffe
+	STB #B
 	NANDI c0
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 SHL7:
 	ROR1
-	STB fffe
+	STB #B
 	NANDI 80
 	LDBA
 	NANDR
-	LDB fffe
+	LDB #B
 
 
 
 Stack Macros (Stack instructions are slow and heavy, use with moderation)
 
 INITSTACK (must be called before being able to use the stack safely):
-	STA fffd
+	STA #A
 	LDAI ff
-	STA fffc
+	STA #SPH
 	LDAI fa
-	STA fffb
-	LDA fffd
+	STA #SPL
+	LDA #A
 
 PUSHA:
-	STA fffd
-	STB fffe
-	STC ffff
+	STA #A
+	STB #B
+	STC #C
 	LDCA
-	LDA fffb
+	LDA #SPL
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	SUBR
-	STA fffc
-	LDA fffb
+	STA #SPH
+	LDA #SPL
 	lbl2:
 	SUBR
-	STA fffb
+	STA #SPL
 	LDBA
-	LDA fffc
+	LDA #SPH
 	STCR
-	LDA fffd
-	LDB fffe
-	LDC ffff
+	LDA #A
+	LDB #B
+	LDC #C
 
 PUSHB:
-	STA fffd
-	STB fffe
-	STC ffff
+	STA #A
+	STB #B
+	STC #C
 	LDCB
-	LDA fffb
+	LDA #SPL
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	SUBR
-	STA fffc
-	LDA fffb
+	STA #SPH
+	LDA #SPL
 	lbl2:
 	SUBR
-	STA fffb
+	STA #SPL
 	LDBA
-	LDA fffc
+	LDA #SPH
 	STCR
-	LDA fffd
-	LDB fffe
-	LDC ffff
+	LDA #A
+	LDB #B
+	LDC #C
 
 PUSHC:
-	STA fffd
-	STB fffe
-	LDA fffb
+	STA #A
+	STB #B
+	LDA #SPL
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	SUBR
-	STA fffc
-	LDA fffb
+	STA #SPH
+	LDA #SPL
 	lbl2:
 	SUBR
-	STA fffb
+	STA #SPL
 	LDBA
-	LDA fffc
+	LDA #SPH
 	STCR
-	LDA fffd
-	LDB fffe
+	LDA #A
+	LDB #B
 
 POPA:
-	STB fffe
-	STC ffff
-	LDA fffc
-	LDB fffb
+	STB #B
+	STC #C
+	LDA #SPH
+	LDB #SPL
 	LDCR
 	LDAB
 	ADDI 1
-	STA fffb
+	STA #SPL
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	ADDR
-	STA fffc
+	STA #SPH
 	lbl2:
 	LDAC
-	LDB fffe
-	LDC ffff
+	LDB #B
+	LDC #C
 
 POPB:
-	STA fffd
-	STC ffff
-	LDA fffc
-	LDB fffb
+	STA #A
+	STC #C
+	LDA #SPH
+	LDB #SPL
 	LDCR
 	LDAB
 	ADDI 1
-	STA fffb
+	STA #SPL
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	ADDR
-	STA fffc
+	STA #SPH
 	lbl2:
 	LDBC
-	LDA fffd
-	LDC ffff
+	LDA #A
+	LDC #C
 
 POPC:
-	STA fffd
-	STB fffe
-	LDA fffc
-	LDB fffb
+	STA #A
+	STB #B
+	LDA #SPH
+	LDB #SPL
 	LDCR
 	LDAB
 	ADDI 1
-	STA fffb
+	STA #SPL
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	ADDR
-	STA fffc
+	STA #SPH
 	lbl2:
-	LDA fffd
-	LDB fffe
+	LDA #A
+	LDB #B
 
 CALL lbl:  (Uses all three registers)
 	STPC
 	LDCA
-	LDA fffb
+	LDA #SPL
 	LDBI 1
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	SUBR
-	STA fffc
-	LDA fffb
+	STA #SPH
+	LDA #SPL
 	lbl2:
 	SUBR
-	STA fffb
+	STA #SPL
 	LDBA
-	LDA fffc
+	LDA #SPH
 	STCR
 	STPC
 	LDCB
-	LDA fffb
+	LDA #SPL
 	LDBI 1
 	JZ lbl3
 	JMP lbl4
 	lbl3:
-	LDA fffc
+	LDA #SPH
 	SUBR
-	STA fffc
-	LDA fffb
+	STA #SPH
+	LDA #SPL
 	lbl4:
 	SUBR
-	STA fffb
+	STA #SPL
 	LDBA
-	LDA fffc
+	LDA #SPH
+	STCR
+	JMP lbl
+
+CALL lbl:  (Uses all three registers)
+	STPC
+	STB #C
+	LDAB
+	
+	LDCA
+	ADDI 42 ;YOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+	LDBC
+	SUBR
+	
+	LDA #SPL
+	LDBI 1
+	JZ lbl1
+	JMP lbl2
+	lbl1:
+	LDA #SPH
+	SUBR
+	STA #SPH
+	LDA #SPL
+	lbl2:
+	SUBR
+	STA #SPL
+	LDBA
+	LDA #SPH
+	LDC #C
+	STCR
+	STPC
+	LDCA
+	LDA #SPL
+	LDBI 1
+	JZ lbl3
+	JMP lbl4
+	lbl3:
+	LDA #SPH
+	SUBR
+	STA #SPH
+	LDA #SPL
+	lbl4:
+	SUBR
+	STA #SPL
+	LDBA
+	LDA #SPH
 	STCR
 	JMP lbl
 
 RET:  (Uses registers A and B, register C is used for return value)
-	STC ffff
-	LDA fffc
-	LDB fffb
+	STC #C
+	LDA #SPH
+	LDB #SPL
 	LDCR
 	LDAB
 	ADDI 1
-	STA fffb
+	STA #SPL
 	JZ lbl1
 	JMP lbl2
 	lbl1:
-	LDA fffc
+	LDA #SPH
 	ADDR
-	STA fffc
+	STA #SPH
 	lbl2:
-	STC fffe
-	LDA fffc
-	LDB fffb
+	STC #B
+	LDA #SPH
+	LDB #SPL
 	LDCR
 	LDAB
 	ADDI 1
-	STA fffb
+	STA #SPL
 	JZ lbl3
 	JMP lbl4
 	lbl3:
-	LDA fffc
+	LDA #SPH
 	ADDR
-	STA fffc
+	STA #SPH
 	lbl4:
 	LDAC
-	LDB fffe
+	LDB #B
+	LDC #C
 	LDPC
-	LDC ffff

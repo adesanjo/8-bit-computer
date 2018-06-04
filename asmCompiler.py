@@ -152,7 +152,7 @@ def evalMacros(code):
             code[i:i+1]=[["STPC"],["LDCA"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"b:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["STPC"],["LDCB"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"d:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["JMP",inst[1]]]
             lbl+=1
         elif inst[0]=="RET":
-            code[i:i+1]=[["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["STC","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"d:"],["LDAC"],["LDB","fffe"],["LDPC"],["LDC","ffff"]]
+            code[i:i+1]=[["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["STC","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"d:"],["LDAC"],["LDB","fffe"],["LDC","ffff"],["LDPC"]]
             lbl+=1
 
 def compileCode(code,debug):
