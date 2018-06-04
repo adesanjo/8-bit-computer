@@ -1,0 +1,11 @@
+INITSTACK
+LDAI f1
+STA #A
+OUT #A
+CALL yolo
+HLT
+
+
+yolo:
+	OUTS
+	RET

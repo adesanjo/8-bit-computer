@@ -31,6 +31,7 @@ fact:
 	POPA
 	PUSHC
 	CALL mul
+	HLT
 	POPA
 	POPA
 	RET
@@ -76,8 +77,10 @@ mul:
 		JZ done
 		LDA #B
 		ADD #C
+		STA #B
 		LDA #A
 		SUBI 1
+		STA #A
 		JMP loop
 	done:
 	LDC #B

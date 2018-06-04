@@ -64,11 +64,11 @@ def printHelp():
     print("  -i    Specify input file")
     print("  -o    Specify output file")
 
-def compileFile(inputFile,outputFile):
+def compileFile(inputFile,outputFile,debug):
     file=open(inputFile)
     code=file.read()
     file.close()
-    compiledCode=compileCode(code)
+    compiledCode=compileCode(code,debug)
     file=open(outputFile,"w")
     file.write(compiledCode)
     file.close()
@@ -155,12 +155,20 @@ def evalMacros(code):
             code[i:i+1]=[["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["STC","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"d:"],["LDAC"],["LDB","fffe"],["LDPC"],["LDC","ffff"]]
             lbl+=1
 
-def compileCode(code):
+def compileCode(code,debug):
     compiledCode="v2.0 raw\n"
     compiled=[]
 
     code=[c.upper().strip().split() if ";" not in c else c[:c.index(";")].upper().strip().split() for c in code.splitlines() if c.strip()!="" and c.strip()[0]!=";"]
     evalMacros(code)
+
+    if debug:
+        i=0
+        while i<len(code):
+            if code[i][0] in oneByteInstructions or code[i][0] in twoBytesInstructions or code[i][0] in threeBytesInstructions:
+                i+=1
+                code.insert(i,["HLT"])
+            i+=1
 
     labels={}
     variables={"#SPL":"fffb","#SPH":"fffc","#A":"fffd","#B":"fffe","#C":"ffff"}
@@ -225,6 +233,9 @@ if __name__=="__main__":
         printHelp()
         sys.exit(0)
     inputFile=None
+    debug=False
+    if "-d" in sys.argv:
+        debug=True
     if "-i" in sys.argv and len(sys.argv)>sys.argv.index("-i")+1:
         inputFile=sys.argv[sys.argv.index("-i")+1]
     if "-o" in sys.argv and len(sys.argv)>sys.argv.index("-o")+1:
@@ -232,6 +243,6 @@ if __name__=="__main__":
     elif inputFile!=None:
         outputFile=inputFile[:inputFile.index(".")]+".out" if "." in inputFile else inputFile+".out"
     if inputFile!=None:
-        compileFile(inputFile,outputFile)
+        compileFile(inputFile,outputFile,debug)
     else:
         printUsage()
