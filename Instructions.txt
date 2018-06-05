@@ -499,14 +499,14 @@ JNZ lbl:
 
 JGZ lbl:  (Also Changes A and B registers)
 	JZ lbl1
-	NANDI 7f
+	NANDI 80
 	LDBA
 	NANDR
 	JZ lbl
 	lbl1:
 
 JLZ lbl:  (Also Changes A and B registers)
-	NANDI 7f
+	NANDI 80
 	LDBA
 	NANDR
 	JZ lbl1
@@ -792,24 +792,23 @@ POPC:
 
 CALL lbl:  (Uses all three registers)
 	STPC
+	STB #C
+	LDAI 1
+	STA #A
+	LDAB
 	LDCA
-	LDA #SPL
-	LDBI 1
+	ADDI 69
+	LDBC
+	SUBR
 	JZ lbl1
-	JMP lbl2
-	lbl1:
-	LDA #SPH
-	SUBR
-	STA #SPH
-	LDA #SPL
-	lbl2:
-	SUBR
-	STA #SPL
+	NANDI 80
 	LDBA
-	LDA #SPH
-	STCR
-	STPC
-	LDCB
+	NANDR
+	JZ lbl2
+	lbl1:
+	LDAI 0
+	STA #A
+	lbl2:
 	LDA #SPL
 	LDBI 1
 	JZ lbl3
@@ -820,33 +819,6 @@ CALL lbl:  (Uses all three registers)
 	STA #SPH
 	LDA #SPL
 	lbl4:
-	SUBR
-	STA #SPL
-	LDBA
-	LDA #SPH
-	STCR
-	JMP lbl
-
-CALL lbl:  (Uses all three registers)
-	STPC
-	STB #C
-	LDAB
-	
-	LDCA
-	ADDI 42 ;YOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-	LDBC
-	SUBR
-	
-	LDA #SPL
-	LDBI 1
-	JZ lbl1
-	JMP lbl2
-	lbl1:
-	LDA #SPH
-	SUBR
-	STA #SPH
-	LDA #SPL
-	lbl2:
 	SUBR
 	STA #SPL
 	LDBA
@@ -855,16 +827,22 @@ CALL lbl:  (Uses all three registers)
 	STCR
 	STPC
 	LDCA
-	LDA #SPL
 	LDBI 1
-	JZ lbl3
-	JMP lbl4
-	lbl3:
+	LDA #A
+	JZ lbl5
+	LDAC
+	ADDR
+	LDCA
+	lbl5:
+	LDA #SPL
+	JZ lbl6
+	JMP lbl7
+	lbl6:
 	LDA #SPH
 	SUBR
 	STA #SPH
 	LDA #SPL
-	lbl4:
+	lbl7:
 	SUBR
 	STA #SPL
 	LDBA

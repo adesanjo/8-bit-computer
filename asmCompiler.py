@@ -81,10 +81,10 @@ def evalMacros(code):
             code[i:i+1]=[["JZ",label%lbl],["JMP",inst[1]],[label%lbl+":"]]
             lbl+=1
         elif inst[0]=="JGZ":
-            code[i:i+1]=[["JZ",label%lbl],["NANDI","7f"],["LDBA"],["NANDR"],["JZ",inst[1]],[label%lbl+":"]]
+            code[i:i+1]=[["JZ",label%lbl],["NANDI","80"],["LDBA"],["NANDR"],["JZ",inst[1]],[label%lbl+":"]]
             lbl+=1
         elif inst[0]=="JLZ":
-            code[i:i+1]=[["NANDI","7f"],["LDBA"],["NANDR"],["JZ",label%lbl],["JMP",inst[1]],[label%lbl+":"]]
+            code[i:i+1]=[["NANDI","80"],["LDBA"],["NANDR"],["JZ",label%lbl],["JMP",inst[1]],[label%lbl+":"]]
             lbl+=1
         elif inst[0]=="ROL1":
             code[i]=["ROR7"]
@@ -148,9 +148,11 @@ def evalMacros(code):
         elif inst[0]=="POPC":
             code[i:i+1]=[["STA","fffd"],["STB","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["LDA","fffd"],["STB","fffe"]]
             lbl+=1
+
         elif inst[0]=="CALL":
-            code[i:i+1]=[["STPC"],["LDCA"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"b:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["STPC"],["LDCB"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"d:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["JMP",inst[1]]]
+            code[i:i+1]=[["STPC"],["STB","#C"],["LDAI","1"],["STA","#A"],["LDAB"],["LDCA"],["ADDI","69"],["LDBC"],["SUBR"],["JZ",label%lbl],["NANDI","80"],["LDBA"],["NANDR"],["JZ",label%lbl+"b"],[label%lbl+":"],["LDAI","0"],["STA","#A"],[label%lbl+"b:"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"d:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["LDC","#C"],["STCR"],["STPC"],["LDCA"],["LDBI","1"],["LDA","#A"],["JZ",label%lbl+"e"],["LDAC"],["ADDR"],["LDCA"],[label%lbl+"e:"],["LDA","#SPL"],["JZ",label%lbl+"f"],["JMP",label%lbl+"g"],[label%lbl+"f:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"g:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["JMP",inst[1]]]
             lbl+=1
+
         elif inst[0]=="RET":
             code[i:i+1]=[["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["STC","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"d:"],["LDAC"],["LDB","fffe"],["LDC","ffff"],["LDPC"]]
             lbl+=1
