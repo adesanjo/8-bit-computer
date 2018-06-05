@@ -792,12 +792,12 @@ POPC:
 
 CALL lbl:  (Uses all three registers)
 	STPC
-	STB #C
 	LDAI 1
 	STA #A
 	LDAB
 	LDCA
 	ADDI 69
+	STA #C
 	LDBC
 	SUBR
 	JZ lbl1

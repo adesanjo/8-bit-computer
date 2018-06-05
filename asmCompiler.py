@@ -64,11 +64,11 @@ def printHelp():
     print("  -i    Specify input file")
     print("  -o    Specify output file")
 
-def compileFile(inputFile,outputFile,debug):
+def compileFile(inputFile,outputFile):
     file=open(inputFile)
     code=file.read()
     file.close()
-    compiledCode=compileCode(code,debug)
+    compiledCode=compileCode(code)
     file=open(outputFile,"w")
     file.write(compiledCode)
     file.close()
@@ -150,27 +150,19 @@ def evalMacros(code):
             lbl+=1
 
         elif inst[0]=="CALL":
-            code[i:i+1]=[["STPC"],["STB","#C"],["LDAI","1"],["STA","#A"],["LDAB"],["LDCA"],["ADDI","69"],["LDBC"],["SUBR"],["JZ",label%lbl],["NANDI","80"],["LDBA"],["NANDR"],["JZ",label%lbl+"b"],[label%lbl+":"],["LDAI","0"],["STA","#A"],[label%lbl+"b:"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"d:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["LDC","#C"],["STCR"],["STPC"],["LDCA"],["LDBI","1"],["LDA","#A"],["JZ",label%lbl+"e"],["LDAC"],["ADDR"],["LDCA"],[label%lbl+"e:"],["LDA","#SPL"],["JZ",label%lbl+"f"],["JMP",label%lbl+"g"],[label%lbl+"f:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"g:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["JMP",inst[1]]]
+            code[i:i+1]=[["STPC"],["LDAI","1"],["STA","#A"],["LDAB"],["LDCA"],["ADDI","69"],["STA","#C"],["LDBC"],["SUBR"],["JZ",label%lbl],["NANDI","80"],["LDBA"],["NANDR"],["JZ",label%lbl+"b"],[label%lbl+":"],["LDAI","0"],["STA","#A"],[label%lbl+"b:"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"d:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["LDC","#C"],["STCR"],["STPC"],["LDCA"],["LDBI","1"],["LDA","#A"],["JZ",label%lbl+"e"],["LDAC"],["ADDR"],["LDCA"],[label%lbl+"e:"],["LDA","#SPL"],["JZ",label%lbl+"f"],["JMP",label%lbl+"g"],[label%lbl+"f:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"g:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["JMP",inst[1]]]
             lbl+=1
 
         elif inst[0]=="RET":
             code[i:i+1]=[["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["STC","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"d:"],["LDAC"],["LDB","fffe"],["LDC","ffff"],["LDPC"]]
             lbl+=1
 
-def compileCode(code,debug):
+def compileCode(code):
     compiledCode="v2.0 raw\n"
     compiled=[]
 
     code=[c.upper().strip().split() if ";" not in c else c[:c.index(";")].upper().strip().split() for c in code.splitlines() if c.strip()!="" and c.strip()[0]!=";"]
     evalMacros(code)
-
-    if debug:
-        i=0
-        while i<len(code):
-            if code[i][0] in oneByteInstructions or code[i][0] in twoBytesInstructions or code[i][0] in threeBytesInstructions:
-                i+=1
-                code.insert(i,["HLT"])
-            i+=1
 
     labels={}
     variables={"#SPL":"fffb","#SPH":"fffc","#A":"fffd","#B":"fffe","#C":"ffff"}
@@ -235,9 +227,6 @@ if __name__=="__main__":
         printHelp()
         sys.exit(0)
     inputFile=None
-    debug=False
-    if "-d" in sys.argv:
-        debug=True
     if "-i" in sys.argv and len(sys.argv)>sys.argv.index("-i")+1:
         inputFile=sys.argv[sys.argv.index("-i")+1]
     if "-o" in sys.argv and len(sys.argv)>sys.argv.index("-o")+1:
@@ -245,6 +234,6 @@ if __name__=="__main__":
     elif inputFile!=None:
         outputFile=inputFile[:inputFile.index(".")]+".out" if "." in inputFile else inputFile+".out"
     if inputFile!=None:
-        compileFile(inputFile,outputFile,debug)
+        compileFile(inputFile,outputFile)
     else:
         printUsage()
