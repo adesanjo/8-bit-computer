@@ -30,8 +30,8 @@ oneByteInstructions={"NOP":"00",
                      "ROR6":"28",
                      "ROR7":"29",
                      "NANDR":"2a",
-                     "STPC":"2f",
-                     "LDPC":"30",
+                     "STPC":"30",
+                     "LDPC":"31",
                      "HLT":"ff",}
 
 twoBytesInstructions={"LDAI":"01",
@@ -53,7 +53,8 @@ threeBytesInstructions={"LDA":"03",
                         "SUB":"22",
                         "NAND":"2c",
                         "JMP":"2d",
-                        "JZ":"2e"}
+                        "JZ":"2e",
+                        "JC":"2f"}
 
 def printUsage():
     print("Usage: asmCompiler [-i inputFile] [-o outputFile] [-h]")
@@ -77,7 +78,10 @@ def evalMacros(code):
     label="autogenlabel%d"
     lbl=0
     for i,inst in enumerate(code):
-        if inst[0]=="JNZ":
+        if inst[0]=="JNC":
+            code[i:i+1]=[["JC",label%lbl],["JMP",inst[1]],[label%lbl+":"]]
+            lbl+=1
+        elif inst[0]=="JNZ":
             code[i:i+1]=[["JZ",label%lbl],["JMP",inst[1]],[label%lbl+":"]]
             lbl+=1
         elif inst[0]=="JGZ":
