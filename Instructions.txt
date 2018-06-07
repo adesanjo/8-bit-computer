@@ -60,9 +60,9 @@ v 2a      NANDR                  Nands values of A and B and stores result in A
 v 2b      NANDI num    num       Nands values of A and an immediate (in B) and stores result in A
 v 2c      NAND add     add       Nands values of A and a memory location (in B) and stores result in A
 
-v 2d      JMP lbl      lbl       Jumps to specified label (uses C register)
-v 2e      JZ lbl       lbl       Jumps to specified label if A == 0 (uses C register)
-v 2f      JC lbl       lbl       Jumps to specified label if last arithmetic operation had a carry (uses C register)
+v 2d      JMP lbl      lbl       Jumps to specified label
+v 2e      JZ lbl       lbl       Jumps to specified label if A == 0
+v 2f      JC lbl       lbl       Jumps to specified label if last arithmetic operation had a carry
 
 v 30      STPC                   Copies value from PC to A and B
 v 31      LDPC                   Copies value from A and B to PC
@@ -101,6 +101,10 @@ Possible Micro Instructions:
 02000000 c out
 04000000 pcl out
 08000000 pch out
+10000000 jcl
+20000000 jch
+40000000 d in
+80000000 d out
 
 00  NOP:
 	mem out, ir in
@@ -449,28 +453,28 @@ Possible Micro Instructions:
 2d  JMP lbl:
 	mem out, ir in
 	pch in, pcl in
-	mem out, c in
+	mem out, d in
 	pch in, pcl in
 	mem out, pcl write, pcl in
-	c out, pch write, pch in
+	d out, pch write, pch in
 	reset counter
 
 2e  JZ lbl:
 	mem out, ir in
 	pch in, pcl in
-	mem out, c in
+	mem out, d in
 	pch in, pcl in
 	mem out, pcl write, jzl
-	c out, pch write, jzh
+	d out, pch write, jzh
 	reset counter
 
 2f  JC lbl:
 	mem out, ir in
 	pch in, pcl in
-	mem out, c in
+	mem out, d in
 	pch in, pcl in
 	mem out, pcl write, jcl
-	c out, pch write, jch
+	d out, pch write, jch
 	reset counter
 
 30  STPC:
@@ -500,7 +504,7 @@ Memory Map:
  <-  fffa  fffb  fffc  fffd  fffe  ffff
     Stack   SPL   SPH  oldA  oldB  oldC
 
-Jump Macros (Use C register for the actual jumps)
+Jump Macros
 
 JNC lbl:
 	JC lbl1
@@ -807,11 +811,12 @@ POPC:
 
 CALL lbl:  (Uses all three registers)
 	STPC
+	STA #B
 	LDAI 1
 	STA #A
 	LDAB
 	LDCA
-	ADDI 69
+	ADDI 6b
 	STA #C
 	LDBC
 	SUBR
@@ -840,8 +845,7 @@ CALL lbl:  (Uses all three registers)
 	LDA #SPH
 	LDC #C
 	STCR
-	STPC
-	LDCA
+	LDC #B
 	LDBI 1
 	LDA #A
 	JZ lbl5

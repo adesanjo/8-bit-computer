@@ -154,7 +154,7 @@ def evalMacros(code):
             lbl+=1
 
         elif inst[0]=="CALL":
-            code[i:i+1]=[["STPC"],["LDAI","1"],["STA","#A"],["LDAB"],["LDCA"],["ADDI","69"],["STA","#C"],["LDBC"],["SUBR"],["JZ",label%lbl],["NANDI","80"],["LDBA"],["NANDR"],["JZ",label%lbl+"b"],[label%lbl+":"],["LDAI","0"],["STA","#A"],[label%lbl+"b:"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"d:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["LDC","#C"],["STCR"],["STPC"],["LDCA"],["LDBI","1"],["LDA","#A"],["JZ",label%lbl+"e"],["LDAC"],["ADDR"],["LDCA"],[label%lbl+"e:"],["LDA","#SPL"],["JZ",label%lbl+"f"],["JMP",label%lbl+"g"],[label%lbl+"f:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"g:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["JMP",inst[1]]]
+            code[i:i+1]=[["STPC"],["STA","#B"],["LDAI","1"],["STA","#A"],["LDAB"],["LDCA"],["ADDI","6b"],["STA","#C"],["LDBC"],["SUBR"],["JZ",label%lbl],["NANDI","80"],["LDBA"],["NANDR"],["JZ",label%lbl+"b"],[label%lbl+":"],["LDAI","0"],["STA","#A"],[label%lbl+"b:"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"d:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["LDC","#C"],["STCR"],["LDC","#B"],["LDBI","1"],["LDA","#A"],["JZ",label%lbl+"e"],["LDAC"],["ADDR"],["LDCA"],[label%lbl+"e:"],["LDA","#SPL"],["JZ",label%lbl+"f"],["JMP",label%lbl+"g"],[label%lbl+"f:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"g:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["JMP",inst[1]]]
             lbl+=1
 
         elif inst[0]=="RET":
