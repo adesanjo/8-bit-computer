@@ -816,19 +816,14 @@ CALL lbl:  (Uses all three registers)
 	STA #A
 	LDAB
 	LDCA
-	ADDI 6b
+	ADDI 68
 	STA #C
 	LDBC
 	SUBR
-	JZ lbl1
-	NANDI 80
-	LDBA
-	NANDR
-	JZ lbl2
-	lbl1:
+	JC lbl1
 	LDAI 0
 	STA #A
-	lbl2:
+	lbl1:
 	LDA #SPL
 	LDBI 1
 	JZ lbl3
@@ -884,7 +879,7 @@ RET:  (Uses registers A and B, register C is used for return value)
 	ADDR
 	STA #SPH
 	lbl2:
-	STC #B
+	STC #A
 	LDA #SPH
 	LDB #SPL
 	LDCR
@@ -898,7 +893,7 @@ RET:  (Uses registers A and B, register C is used for return value)
 	ADDR
 	STA #SPH
 	lbl4:
-	LDAC
-	LDB #B
+	LDBC
+	LDA #A
 	LDC #C
 	LDPC
