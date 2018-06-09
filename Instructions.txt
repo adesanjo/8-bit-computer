@@ -464,8 +464,8 @@ Possible Micro Instructions:
 	pch in, pcl in
 	mem out, d in
 	pch in, pcl in
-	mem out, pcl write, jzl
-	d out, pch write, jzh
+	mem out, jzl, pcl in
+	d out, jzh, pch in
 	reset counter
 
 2f  JC lbl:
@@ -473,8 +473,8 @@ Possible Micro Instructions:
 	pch in, pcl in
 	mem out, d in
 	pch in, pcl in
-	mem out, pcl write, jcl
-	d out, pch write, jch
+	mem out, jcl, pcl in
+	d out, jch, pch in
 	reset counter
 
 30  STPC:
@@ -816,7 +816,7 @@ CALL lbl:  (Uses all three registers)
 	STA #A
 	LDAB
 	LDCA
-	ADDI 68
+	ADDI 67
 	STA #C
 	LDBC
 	SUBR
