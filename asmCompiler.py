@@ -57,12 +57,11 @@ threeBytesInstructions={"LDA":"03",
                         "JC":"2f"}
 
 def printUsage():
-    print("Usage: asmCompiler [-i inputFile] [-o outputFile] [-h]")
+    print("Usage: asmCompiler inputFile [-o outputFile] [-h]")
 
 def printHelp():
-    print("Usage: asmCompiler [-i inputFile] [-o outputFile] [-h]")
+    print("Usage: asmCompiler inputFile [-o outputFile] [-h]")
     print("  -h    Print this help message")
-    print("  -i    Specify input file")
     print("  -o    Specify output file")
 
 def compileFile(inputFile,outputFile):
@@ -231,8 +230,8 @@ if __name__=="__main__":
         printHelp()
         sys.exit(0)
     inputFile=None
-    if "-i" in sys.argv and len(sys.argv)>sys.argv.index("-i")+1:
-        inputFile=sys.argv[sys.argv.index("-i")+1]
+    if len(sys.argv)>1:
+        inputFile=sys.argv[1]
     if "-o" in sys.argv and len(sys.argv)>sys.argv.index("-o")+1:
         outputFile=sys.argv[sys.argv.index("-o")+1]
     elif inputFile!=None:
