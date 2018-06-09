@@ -1,0 +1,27 @@
+LDAI 0
+PUSHA
+LDAI 10
+PUSHA
+
+CALL gcd
+
+OUTC
+HLT
+
+gcd:
+	STA #A
+	LDAB
+	ADDI 3
+	LDBA
+	LDA #A
+	LDAR
+	JNZ notZero
+	LDA #SPL
+	ADDI 2
+	LDBA
+	LDA #SPH
+	LDCR
+	RET
+	notZero:
+	LDCI ff
+	RET

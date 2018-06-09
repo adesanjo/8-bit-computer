@@ -76,6 +76,7 @@ def compileFile(inputFile,outputFile):
 def evalMacros(code):
     label="autogenlabel%d"
     lbl=0
+    needStack=False
     for i,inst in enumerate(code):
         if inst[0]=="JNC":
             code[i:i+1]=[["JC",label%lbl],["JMP",inst[1]],[label%lbl+":"]]
@@ -104,68 +105,76 @@ def evalMacros(code):
         elif inst[0]=="ROL7":
             code[i]=["ROR1"]
         elif inst[0]=="SHR1":
-            code[i:i+1]=[["ROR1"],["STB","fffe"],["NANDI","7f"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR1"],["STB","#B"],["NANDI","7f"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHR2":
-            code[i:i+1]=[["ROR2"],["STB","fffe"],["NANDI","3f"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR2"],["STB","#B"],["NANDI","3f"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHR3":
-            code[i:i+1]=[["ROR3"],["STB","fffe"],["NANDI","1f"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR3"],["STB","#B"],["NANDI","1f"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHR4":
-            code[i:i+1]=[["ROR4"],["STB","fffe"],["NANDI","f"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR4"],["STB","#B"],["NANDI","f"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHR5":
-            code[i:i+1]=[["ROR5"],["STB","fffe"],["NANDI","7"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR5"],["STB","#B"],["NANDI","7"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHR6":
-            code[i:i+1]=[["ROR6"],["STB","fffe"],["NANDI","3"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR6"],["STB","#B"],["NANDI","3"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHR7":
-            code[i:i+1]=[["ROR7"],["STB","fffe"],["NANDI","1"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR7"],["STB","#B"],["NANDI","1"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL1":
-            code[i:i+1]=[["ROR7"],["STB","fffe"],["NANDI","fe"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR7"],["STB","#B"],["NANDI","fe"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL2":
-            code[i:i+1]=[["ROR6"],["STB","fffe"],["NANDI","fc"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR6"],["STB","#B"],["NANDI","fc"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL3":
-            code[i:i+1]=[["ROR5"],["STB","fffe"],["NANDI","f8"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR5"],["STB","#B"],["NANDI","f8"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL4":
-            code[i:i+1]=[["ROR4"],["STB","fffe"],["NANDI","f0"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR4"],["STB","#B"],["NANDI","f0"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL5":
-            code[i:i+1]=[["ROR3"],["STB","fffe"],["NANDI","e0"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR3"],["STB","#B"],["NANDI","e0"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL6":
-            code[i:i+1]=[["ROR2"],["STB","fffe"],["NANDI","c0"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR2"],["STB","#B"],["NANDI","c0"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="SHL7":
-            code[i:i+1]=[["ROR1"],["STB","fffe"],["NANDI","80"],["LDBA"],["NANDR"],["LDB","fffe"]]
+            code[i:i+1]=[["ROR1"],["STB","#B"],["NANDI","80"],["LDBA"],["NANDR"],["LDB","#B"]]
         elif inst[0]=="INITSTACK":
-            code[i:i+1]=[["STA","fffd"],["LDAI","ff"],["STA","fffc"],["LDAI","fa"],["STA","fffb"],["LDA","fffd"]]
+            code[i:i+1]=[["STA","#A"],["LDAI","ff"],["STA","#SPH"],["LDAI","fa"],["STA","#SPL"],["LDA","#A"]]
         elif inst[0]=="PUSHA":
-            code[i:i+1]=[["STA","fffd"],["STB","fffe"],["STC","ffff"],["LDCA"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"b:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["LDA","fffd"],["LDB","fffe"],["LDC","ffff"]]
+            code[i:i+1]=[["STA","#A"],["STB","#B"],["STC","#C"],["LDCA"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"b:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["LDA","#A"],["LDB","#B"],["LDC","#C"]]
             lbl+=1
+            needStack=True
         elif inst[0]=="PUSHB":
-            code[i:i+1]=[["STA","fffd"],["STB","fffe"],["STC","ffff"],["LDCB"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"b:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["LDA","fffd"],["LDB","fffe"],["LDC","ffff"]]
+            code[i:i+1]=[["STA","#A"],["STB","#B"],["STC","#C"],["LDCB"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"b:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["LDA","#A"],["LDB","#B"],["LDC","#C"]]
             lbl+=1
+            needStack=True
         elif inst[0]=="PUSHC":
-            code[i:i+1]=[["STA","fffd"],["STB","fffe"],["LDA","fffb"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["SUBR"],["STA","fffc"],["LDA","fffb"],[label%lbl+"b:"],["SUBR"],["STA","fffb"],["LDBA"],["LDA","fffc"],["STCR"],["LDA","fffd"],["LDB","fffe"]]
+            code[i:i+1]=[["STA","#A"],["STB","#B"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"b:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["LDA","#A"],["LDB","#B"]]
             lbl+=1
+            needStack=True
         elif inst[0]=="POPA":
-            code[i:i+1]=[["STB","fffe"],["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["LDAC"],["LDB","fffe"],["STC","ffff"]]
+            code[i:i+1]=[["STB","#B"],["STC","#C"],["LDA","#SPH"],["LDB","#SPL"],["LDCR"],["LDAB"],["ADDI","1"],["STA","#SPL"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["ADDR"],["STA","#SPH"],[label%lbl+"b:"],["LDAC"],["LDB","#B"],["STC","#C"]]
             lbl+=1
+            needStack=True
         elif inst[0]=="POPB":
-            code[i:i+1]=[["STA","fffd"],["STC","ffff"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["LDBC"],["LDA","fffd"],["STC","ffff"]]
+            code[i:i+1]=[["STA","#A"],["STC","#C"],["LDA","#SPH"],["LDB","#SPL"],["LDCR"],["LDAB"],["ADDI","1"],["STA","#SPL"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["ADDR"],["STA","#SPH"],[label%lbl+"b:"],["LDBC"],["LDA","#A"],["STC","#C"]]
             lbl+=1
+            needStack=True
         elif inst[0]=="POPC":
-            code[i:i+1]=[["STA","fffd"],["STB","fffe"],["LDA","fffc"],["LDB","fffb"],["LDCR"],["LDAB"],["ADDI","1"],["STA","fffb"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","fffc"],["ADDR"],["STA","fffc"],[label%lbl+"b:"],["LDA","fffd"],["STB","fffe"]]
+            code[i:i+1]=[["STA","#A"],["STB","#B"],["LDA","#SPH"],["LDB","#SPL"],["LDCR"],["LDAB"],["ADDI","1"],["STA","#SPL"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["ADDR"],["STA","#SPH"],[label%lbl+"b:"],["LDA","#A"],["STB","#B"]]
             lbl+=1
-
+            needStack=True
         elif inst[0]=="CALL":
             code[i:i+1]=[["STPC"],["STA","#B"],["LDAI","1"],["STA","#A"],["LDAB"],["LDCA"],["ADDI","67"],["STA","#C"],["LDBC"],["SUBR"],["JC",label%lbl+"b"],["LDAI","0"],["STA","#A"],[label%lbl+"b:"],["LDA","#SPL"],["LDBI","1"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"d:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["LDC","#C"],["STCR"],["LDC","#B"],["LDBI","1"],["LDA","#A"],["JZ",label%lbl+"e"],["LDAC"],["ADDR"],["LDCA"],[label%lbl+"e:"],["LDA","#SPL"],["JZ",label%lbl+"f"],["JMP",label%lbl+"g"],[label%lbl+"f:"],["LDA","#SPH"],["SUBR"],["STA","#SPH"],["LDA","#SPL"],[label%lbl+"g:"],["SUBR"],["STA","#SPL"],["LDBA"],["LDA","#SPH"],["STCR"],["JMP",inst[1]]]
             lbl+=1
-
+            needStack=True
         elif inst[0]=="RET":
             code[i:i+1]=[["STC","#C"],["LDA","#SPH"],["LDB","#SPL"],["LDCR"],["LDAB"],["ADDI","1"],["STA","#SPL"],["JZ",label%lbl],["JMP",label%lbl+"b"],[label%lbl+":"],["LDA","#SPH"],["ADDR"],["STA","#SPH"],[label%lbl+"b:"],["STC","#A"],["LDA","#SPH"],["LDB","#SPL"],["LDCR"],["LDAB"],["ADDI","1"],["STA","#SPL"],["JZ",label%lbl+"c"],["JMP",label%lbl+"d"],[label%lbl+"c:"],["LDA","#SPH"],["ADDR"],["STA","#SPH"],[label%lbl+"d:"],["LDBC"],["LDA","#A"],["LDC","#C"],["LDPC"]]
             lbl+=1
+            needStack=True
+    return needStack
 
 def compileCode(code):
     compiledCode="v2.0 raw\n"
     compiled=[]
 
     code=[c.upper().strip().split() if ";" not in c else c[:c.index(";")].upper().strip().split() for c in code.splitlines() if c.strip()!="" and c.strip()[0]!=";"]
-    evalMacros(code)
+    if evalMacros(code):
+        code=[["LDAI","ff"],["STA","#SPH"],["LDAI","fa"],["STA","#SPL"],["LDAI","0"]]+code
 
     labels={}
     variables={"#SPL":"fffb","#SPH":"fffc","#A":"fffd","#B":"fffe","#C":"ffff"}
